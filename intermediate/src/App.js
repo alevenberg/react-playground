@@ -66,6 +66,45 @@ function App() {
               <th>{`${header}`}</th>
             )}
           </tr>
+
+          {locations.map((location, idx) =>
+            <>
+              <tr key={idx}>
+                <th>
+                  {`${location['street.number']}`}
+                </th>
+                <th>
+                  {`${location['street.name']}`}
+
+                </th>
+                <th>
+                  {`${location.city}`}
+                </th>
+                <th>
+                  {`${location.state}`}
+                </th>
+                <th>
+                  {`${location.country}`}
+                </th>
+                <th>
+                  {`${location.postcode}`}
+                </th>
+                <th>
+                  {`${location["coordinates.latitude"]}`}
+                </th>
+                <th>
+                  {`${location["coordinates.longitude"]}`}
+                </th>
+
+                <th>
+                  {`${location["timezone.offset"]}`}
+                </th>
+                <th>
+                  {`${location["timezone.description"]}`}
+                </th>
+              </tr>
+            </>
+          )}
         </thead>
       </table>
       <h2>Raw data</h2>
