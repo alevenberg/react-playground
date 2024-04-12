@@ -26,6 +26,9 @@ function App() {
   const [postRetROR, setPostRetROR] = useState(initialPostRetROR);
   const [inflation, setInflation] = useState(initialInflation);
 
+  const formatter = new Intl.NumberFormat("en-US", {
+    style: "currency", currency: "USD", minimumFractionDigits: 2
+  });
   useEffect(() => {
     localStorage.setItem('retirementAge', retirementAge);
     localStorage.setItem('targetRetAmt', targetRetAmt);
@@ -37,13 +40,20 @@ function App() {
     localStorage.setItem('preRetROR', preRetROR);
     localStorage.setItem('postRetROR', postRetROR);
     localStorage.setItem('inflation', inflation);
+
+    let netPostRetROR = (postRetROR - inflation) / 100;
+    if (netPostRetROR == 0) netPostRetROR = 0.00001;
+
+    let updatedTargetRetAmt = annualRetExp / netPostRetROR;
+    setTargetRetAmt(updatedTargetRetAmt);
+
   }, [annualRetExp, currentAge, currentSavings, contributions, contributionFreq, preRetROR, postRetROR, inflation])
 
   return (
     <div className="App">
       <h1>Fire Calculator</h1>
       <h2>You can retire at age {retirementAge}</h2>
-      <div>Target retirement amount: ${targetRetAmt}</div>
+      <div>Target retirement amount: {formatter.format(targetRetAmt)}</div>
       <form className='fire-calc-form'>
         <label> Age
           <input type="number" value={currentAge} onChange={(e) => setCurrentAge(parseInt(e.target.value) || 0)} />
