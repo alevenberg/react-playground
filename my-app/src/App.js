@@ -12,10 +12,12 @@ function App() {
   const [counter, setCounter] = useState(0);
   const [users, setUsers] = useState([]);
   const [randomUser, setRandomUser] = useState("");
+  const [nextPage, setNextPage] = useState(0);
 
-  async function getUser() {
+  async function getUser(pageNumber) {
     try {
-      const response = await axios.get('https://randomuser.me/api');
+      const response = await axios.get(`https://randomuser.me/api?page=${pageNumber}`);
+      console.log(`https://randomuser.me/api?page=${pageNumber}`)
       const data = JSON.stringify(response.data, null, 2);
       setRandomUser(data || "No data found");
       // Assign each user a uuid for the app
@@ -26,6 +28,7 @@ function App() {
         const results = response.data.results;
         return [...prevUsers, ...results]
       })
+      setNextPage(response.data.info.page + 1)
     } catch (error) {
       console.error(error);
     }
@@ -33,7 +36,7 @@ function App() {
 
   // Not sure why this calls getUser twice on startup
   useEffect(() => {
-    getUser()
+    getUser(nextPage)
     // to debug
     // console.log("loaded");
   }, [])
@@ -43,7 +46,7 @@ function App() {
   }
 
   function handleGetUser(e) {
-    getUser()
+    getUser(nextPage)
   }
 
   function getUserName(user) {
@@ -67,6 +70,7 @@ function App() {
           </div>
         ))
       }
+
       <h2> User Json</h2>
       <button onClick={handleGetUser}> Get user </button>
       <pre> {randomUser} </pre>
