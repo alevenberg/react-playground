@@ -12,6 +12,7 @@ const queryClient = new QueryClient()
 function App() {
   const [people, SetPeople] = useState([])
   const [locations, SetLocations] = useState([])
+  const [tableHeaders, SetTableHeaders] = useState([])
 
   async function fetchData() {
     try {
@@ -51,12 +52,24 @@ function App() {
     fetchData().then(data => {
       SetPeople(data);
       SetLocations(flattenLocations(data.map(({ location }) => location)));
+      SetTableHeaders(Object.keys(locations[0]));
     })
   }, [])
 
   return (
     <>
       <h1>Locations</h1>
+      <table>
+        <thead>
+          <tr>
+            {tableHeaders.map((header) =>
+              <th>{`${header}`}</th>
+            )}
+          </tr>
+        </thead>
+      </table>
+      <h2>Raw data</h2>
+
       {locations.map((location, idx) =>
         <>
           <pre>{JSON.stringify(location, null, 2)}</pre>
