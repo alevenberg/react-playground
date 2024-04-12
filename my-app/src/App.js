@@ -17,6 +17,10 @@ function App() {
     }
   }
 
+  useEffect(() => {
+    getUser()
+  }, [])
+
   function handleIncrement(e) {
     setCounter(counter + 1)
   }
