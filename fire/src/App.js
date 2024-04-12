@@ -1,23 +1,37 @@
-import logo from './logo.svg';
 import './App.css';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Fire Calculator</h1>
+      <form className='fire-calc-form'>
+        <label> Age
+          <input type="number" />
+        </label>
+        <label> Current investment balance
+          <input type="number" />
+        </label>
+
+        <label> Annual retirement expenses
+          <input type="number" />
+        </label>
+        <label> Regular contributions
+          <input type="number" />
+        </label>
+        <label> Contritbution frequency
+          <select>
+            <option value="Monthly"> Monthly</option>
+            <option value="Annually"> Annually</option>
+          </select>
+        </label>
+        <div> <h2>Advanced</h2></div>
+        <label> Pre-retirement rate of return
+          <input type="number" /></label>
+        <label> Post-retirement rate of return
+          <input type="number" /></label>
+        <label> Inflation
+          <input type="number" /></label>
+      </form>
     </div>
   );
 }
