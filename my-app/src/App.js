@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 // 2. Fetch data from https://randomuser.me/api
 // 3. Dump data to string
 // 4. Display name and image of every user (assume we could have multiple users in array)
+// 5. Add a button to load more results (paginate through users) ?page=2
 
 function App() {
   const [counter, setCounter] = useState(0);
@@ -60,12 +61,10 @@ function App() {
       {
         users?.map((user) =>
         (
-          <>
-            <div >
-              <p key={user.my_app_id}> {getUserName(user)}</p>
-              <img src={user.picture.thumbnail} alt="user thumbnail" />
-            </div>
-          </>
+          <div key={user.my_app_id} >
+            <p> {getUserName(user)}</p>
+            <img src={user.picture.thumbnail} alt="user thumbnail" />
+          </div>
         ))
       }
       <h2> User Json</h2>
