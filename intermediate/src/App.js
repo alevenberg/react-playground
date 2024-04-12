@@ -11,6 +11,7 @@ const queryClient = new QueryClient()
 
 function App() {
   const [people, SetPeople] = useState([])
+  const [locations, SetLocations] = useState([])
 
   async function fetchData() {
     try {
@@ -22,16 +23,44 @@ function App() {
     }
   }
 
+  const flattenJSON = (obj = {}, res = {}, extraKey = '') => {
+    for (const key in obj) {
+      if (typeof obj[key] !== 'object') {
+        res[extraKey + key] = obj[key];
+      } else {
+        flattenJSON(obj[key], res, `${extraKey}${key}.`);
+      };
+    };
+    return res;
+  };
+
+  const flattenLocations = (locations) => {
+    var flattenedLocations = [];
+
+    for (const location of locations) {
+      var flatLocation = {}
+      flattenJSON(location, flatLocation);
+      flattenedLocations.push(flatLocation)
+    }
+
+    // console.log(flattenedLocations);
+    return flattenedLocations
+  }
+
   useEffect(() => {
     fetchData().then(data => {
       SetPeople(data);
+      SetLocations(flattenLocations(data.map(({ location }) => location)));
     })
   }, [])
 
   return (
     <>
       <h1>Hi</h1>
-      {people.map((person, idx) => <div key={idx}>{person.name.first}</div>)}
+      {people.map((person, idx) => <div key={idx}>{
+        `${person.name.first} ${person.name.last}`}
+      </div>
+      )}
       < QueryClientProvider client={queryClient} >
         <Example />
       </QueryClientProvider >
@@ -52,7 +81,7 @@ function Example() {
 
   if (error) return 'An error has occurred: ' + error.message
 
-  console.log(data)
+  // console.log(data)
   return (
     <pre>{JSON.stringify(data, null, 2)}</pre>
   )
