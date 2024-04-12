@@ -3,6 +3,9 @@
 // 2a. Create a flat array with the location data only
 // 2b. Create a table with the data in it (flatten location)
 // row is a person, columms: street name, street number, city, state ...
+// 3. Click on header and order the 
+// 3a. sort it one way
+// 3b toggle on click
 import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react'
 import axios from 'axios';
@@ -43,16 +46,39 @@ function App() {
       flattenJSON(location, flatLocation);
       flattenedLocations.push(flatLocation)
     }
+    SetTableHeaders(Object.keys(flattenedLocations[0]));
 
-    console.log(flattenedLocations);
+    // console.log(flattenedLocations);
     return flattenedLocations
+  }
+
+  const sortColumn = (header) => {
+    const newFlattenedLocations = [
+      ...locations
+    ];
+    // console.log(header)
+
+    // console.log(newFlattenedLocations)
+    newFlattenedLocations.sort((a, b) => {
+      const valueA = a[header];
+      const valueB = b[header];
+      if (valueA < valueB) {
+        return -1;
+      }
+      if (valueA > valueB) {
+        return 1;
+      }
+      return 0;
+    })
+    // console.log(newFlattenedLocations)
+
+    SetLocations(newFlattenedLocations);
   }
 
   useEffect(() => {
     fetchData().then(data => {
       SetPeople(data);
       SetLocations(flattenLocations(data.map(({ location }) => location)));
-      SetTableHeaders(Object.keys(locations[0]));
     })
   }, [])
 
@@ -62,16 +88,17 @@ function App() {
       <table>
         <thead>
           <tr>
-            {tableHeaders.map((header) =>
-              <th>{`${header}`}</th>
+            {tableHeaders.map((header, headerIdx) =>
+              <th key={headerIdx} onClick={() => { sortColumn(header); }}>
+                {`${header}`}</th>
             )}
           </tr>
         </thead>
         <tbody>
-          {locations.map((location, idx) => (
+          {locations.map((location, locationIdx) => (
             <>
               {
-                <tr key={idx}>
+                <tr key={locationIdx}>
                   {Object.values(location).map((value, valueIdx) => (
                     <td key={valueIdx}> {value}</td>
                   ))
