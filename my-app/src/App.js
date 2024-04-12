@@ -33,6 +33,8 @@ function App() {
   // Not sure why this calls getUser twice on startup
   useEffect(() => {
     getUser()
+    // to debug
+    // console.log("loaded");
   }, [])
 
   function handleIncrement(e) {
