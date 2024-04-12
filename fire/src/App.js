@@ -26,6 +26,19 @@ function App() {
   const [postRetROR, setPostRetROR] = useState(initialPostRetROR);
   const [inflation, setInflation] = useState(initialInflation);
 
+  useEffect(() => {
+    localStorage.setItem('retirementAge', retirementAge);
+    localStorage.setItem('targetRetAmt', targetRetAmt);
+    localStorage.setItem('annualRetExp', annualRetExp);
+    localStorage.setItem('currentAge', currentAge);
+    localStorage.setItem('currentSavings', currentSavings);
+    localStorage.setItem('contributions', contributions);
+    localStorage.setItem('contributionFreq', contributionFreq);
+    localStorage.setItem('preRetROR', preRetROR);
+    localStorage.setItem('postRetROR', postRetROR);
+    localStorage.setItem('inflation', inflation);
+  }, [annualRetExp, currentAge, currentSavings, contributions, contributionFreq, preRetROR, postRetROR, inflation])
+
   return (
     <div className="App">
       <h1>Fire Calculator</h1>
