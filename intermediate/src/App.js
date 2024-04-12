@@ -10,6 +10,7 @@
 // Conclusion
 // Option 1, ASC -> DESC -> Unsorted -> Asc -> Desc
 // 0 = UNSORTED, DESC = 1, ASC = 2
+// Optimization could be not storing sorted data and handling the sorting in the render function
 // Option 2. Input field like doc and will present relevant rows
 
 import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
@@ -24,6 +25,7 @@ function App() {
   const [unsortedLocations, SetUnsortedLocations] = useState([])
   const [tableHeaders, SetTableHeaders] = useState([])
   const [sortingDirection, SetSortingDirection] = useState(0)
+  const [inputFieldValue, SetInputFieldValue] = useState("")
 
   async function fetchData() {
     try {
@@ -59,6 +61,12 @@ function App() {
 
     // console.log(flattenedLocations);
     return flattenedLocations
+  }
+
+  const getFilteredRows = (rows, filterKey) => {
+    return rows.filter((row) => {
+      return Object.values(row).some(s => ("" + s).toLowerCase().includes(filterKey));
+    });
   }
 
   const sortColumn = (header) => {
@@ -105,6 +113,7 @@ function App() {
   return (
     <>
       <h1>Locations</h1>
+      <input value={inputFieldValue} onChange={(e) => SetInputFieldValue(e.target.value)} />
       <table>
         <thead>
           <tr>
@@ -115,7 +124,7 @@ function App() {
           </tr>
         </thead>
         <tbody>
-          {locations.map((location, locationIdx) => (
+          {getFilteredRows(locations, inputFieldValue).map((location, locationIdx) => (
             <>
               {
                 <tr key={locationIdx}>
