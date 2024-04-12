@@ -29,6 +29,22 @@ function App() {
   const formatter = new Intl.NumberFormat("en-US", {
     style: "currency", currency: "USD", minimumFractionDigits: 2
   });
+
+  const calculateRetirementAge = (updatedTargetRetAmt) => {
+    const netPreRetROR = (preRetROR - inflation) / 100;
+    let currBal = currentSavings;
+
+    const annualCont = contributionFreq === "Annually" ? contributions : contributions * 12;
+    let retAge = currentAge;
+
+    while (currBal < updatedTargetRetAmt) {
+      currBal = annualCont + currBal * (1 + netPreRetROR);
+      retAge += 1;
+      if (retAge > 100) break;
+    }
+    return retAge;
+  }
+
   useEffect(() => {
     localStorage.setItem('retirementAge', retirementAge);
     localStorage.setItem('targetRetAmt', targetRetAmt);
@@ -46,6 +62,9 @@ function App() {
 
     let updatedTargetRetAmt = annualRetExp / netPostRetROR;
     setTargetRetAmt(updatedTargetRetAmt);
+
+    const retAge = calculateRetirementAge(updatedTargetRetAmt);
+    setRetirementAge(retAge);
 
   }, [annualRetExp, currentAge, currentSavings, contributions, contributionFreq, preRetROR, postRetROR, inflation])
 
