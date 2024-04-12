@@ -22,7 +22,7 @@ function App() {
       console.error(error);
     }
   }
-
+  // https://www.tutorialspoint.com/flattening-a-json-object-in-javascript
   const flattenJSON = (obj = {}, res = {}, extraKey = '') => {
     for (const key in obj) {
       if (typeof obj[key] !== 'object') {
@@ -43,7 +43,7 @@ function App() {
       flattenedLocations.push(flatLocation)
     }
 
-    // console.log(flattenedLocations);
+    console.log(flattenedLocations);
     return flattenedLocations
   }
 
@@ -56,11 +56,22 @@ function App() {
 
   return (
     <>
-      <h1>Hi</h1>
+      <h1>Locations</h1>
+      {locations.map((location, idx) =>
+        <>
+          <pre>{JSON.stringify(location, null, 2)}</pre>
+          <div key={idx}>{
+            `${location.city} ${location["coordinates.latitude"]} ${location["street.name"]} `}
+          </div>
+        </>
+      )}
+
+      <h1>People</h1>
       {people.map((person, idx) => <div key={idx}>{
         `${person.name.first} ${person.name.last}`}
       </div>
       )}
+
       < QueryClientProvider client={queryClient} >
         <Example />
       </QueryClientProvider >
