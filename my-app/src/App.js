@@ -11,7 +11,7 @@ function App() {
   async function getUser() {
     try {
       const response = await axios.get('https://randomuser.me/api');
-      setRandomUser(JSON.stringify(response))
+      return setRandomUser(JSON.stringify(response, null, 2) || "No data found");
     } catch (error) {
       console.error(error);
     }
@@ -36,7 +36,7 @@ function App() {
       <button onClick={handleIncrement}> Increment counter </button>
       <h1> Get User</h1>
       <button onClick={handleGetUser}> Get user </button>
-      <div> {randomUser} </div>
+      <pre> {randomUser} </pre>
     </div>
   );
 }
