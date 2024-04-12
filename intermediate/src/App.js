@@ -16,6 +16,7 @@ function App() {
   const [people, SetPeople] = useState([])
   const [locations, SetLocations] = useState([])
   const [tableHeaders, SetTableHeaders] = useState([])
+  const [sortingDirection, SetSortingDirection] = useState(0)
 
   async function fetchData() {
     try {
@@ -70,15 +71,23 @@ function App() {
       }
       return 0;
     })
+
+    if (sortingDirection === 0) {
+      SetLocations(newFlattenedLocations);
+      SetSortingDirection(1);
+    } else {
+      SetLocations(newFlattenedLocations.reverse());
+      SetSortingDirection(0);
+    }
     // console.log(newFlattenedLocations)
 
-    SetLocations(newFlattenedLocations);
   }
 
   useEffect(() => {
     fetchData().then(data => {
       SetPeople(data);
       SetLocations(flattenLocations(data.map(({ location }) => location)));
+      SetSortingDirection(0);
     })
   }, [])
 
