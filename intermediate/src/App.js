@@ -6,6 +6,12 @@
 // 3. Click on header and order the 
 // 3a. sort it one way
 // 3b toggle on click
+// Ignore unsorted
+// Conclusion
+// Option 1, ASC -> DESC -> Unsorted -> Asc -> Desc
+// 0 = UNSORTED, DESC = 1, ASC = 2
+// Option 2. Input field like doc and will present relevant rows
+
 import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react'
 import axios from 'axios';
@@ -15,6 +21,7 @@ const queryClient = new QueryClient()
 function App() {
   const [people, SetPeople] = useState([])
   const [locations, SetLocations] = useState([])
+  const [unsortedLocations, SetUnsortedLocations] = useState([])
   const [tableHeaders, SetTableHeaders] = useState([])
   const [sortingDirection, SetSortingDirection] = useState(0)
 
@@ -48,6 +55,7 @@ function App() {
       flattenedLocations.push(flatLocation)
     }
     SetTableHeaders(Object.keys(flattenedLocations[0]));
+    SetUnsortedLocations(flattenedLocations);
 
     // console.log(flattenedLocations);
     return flattenedLocations
@@ -73,9 +81,12 @@ function App() {
     })
 
     if (sortingDirection === 0) {
-      SetLocations(newFlattenedLocations);
+      SetLocations(unsortedLocations);
       SetSortingDirection(1);
-    } else {
+    } else if (sortingDirection === 1) {
+      SetLocations(newFlattenedLocations);
+      SetSortingDirection(2);
+    } else if (sortingDirection === 2) {
       SetLocations(newFlattenedLocations.reverse());
       SetSortingDirection(0);
     }
