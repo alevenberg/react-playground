@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
 
 // 1. Create a simple counter
 // 2. Fetch data from https://randomuser.me/api
@@ -16,12 +17,20 @@ function App() {
       const response = await axios.get('https://randomuser.me/api');
       const data = JSON.stringify(response.data, null, 2);
       setRandomUser(data || "No data found");
-      setUsers(response.data.results)
+      // Assign each user a uuid for the app
+      response.data.results.map((user) =>
+      (user.my_app_id = uuidv4()
+      ))
+      setUsers(prevUsers => {
+        const results = response.data.results;
+        return [...prevUsers, ...results]
+      })
     } catch (error) {
       console.error(error);
     }
   }
 
+  // Not sure why this calls getUser twice on startup
   useEffect(() => {
     getUser()
   }, [])
@@ -35,8 +44,7 @@ function App() {
   }
 
   function getUserName(user) {
-    // console.log(user)
-    const { name: { title = "Undefied", first = "Undefined", last = "Undefined" } } = user
+    const { name: { title, first, last } } = user
     return `${title} ${first} ${last}`
   }
 
@@ -51,8 +59,9 @@ function App() {
         users?.map((user) =>
         (
           <>
-            <div>
-              <p>{getUserName(user)}</p>
+            <div >
+              <p key={user.my_app_id}> {getUserName(user)}</p>
+              <img src={user.picture.thumbnail} alt="user thumbnail" />
             </div>
           </>
         ))
