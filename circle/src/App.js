@@ -38,11 +38,11 @@ function App() {
   }
 
   return (<>
-    <button onClick={handleUndo}>Undo </button>
-    <button onClick={handleRedo}>Redo </button>
+    <button disabled={points.length == 0} onClick={handleUndo}>Undo </button>
+    <button disabled={undoPoints.length == 0} onClick={handleRedo}>Redo </button>
     <div className="App" onClick={handlePlaceCircle}>
       <h1> Circle</h1>
-      {points.map(point => (<div className="Point" style={{
+      {points.map((point, idx) => (<div key={idx} className="Point" style={{
         left: point.x + "px",
         top: point.y + "px"
       }}></div>))
