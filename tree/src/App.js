@@ -31,15 +31,17 @@ const files = {
   ]
 };
 
-function Entry({name, children}) {
-  return <div>{name} 
-  {children?.map((entry)=>(<Entry {...entry}/>))}</div>;
+function Entry({entry, depth}) {
+  return <div>{entry.name} 
+  <div style={{paddingLeft: `${depth*10}px`}}>
+  {entry.children?.map((entry)=>(<Entry entry={entry} depth={depth+1}/>))}</div>
+  </div>;
 }
 
 function App() {
   return (
     <div className="App">
-      {files.children.map((entry)=> (<Entry {...entry}/>))}
+      {files.children.map((entry)=> (<Entry entry={entry} depth={1}/>))}
     </div>
   );
 }
