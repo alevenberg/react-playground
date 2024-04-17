@@ -18,6 +18,7 @@ function App() {
   function handleUndo() {
     var newPoints = [...points];
     var oldPoint = newPoints.pop();
+    if (!oldPoint) return;
     setUndoPoints([
       ...undoPoints,
       oldPoint
@@ -28,6 +29,7 @@ function App() {
   function handleRedo() {
     var undoPointsArr = [...undoPoints];
     var oldPoint = undoPointsArr.pop();
+    if (!oldPoint) return;
     setUndoPoints(undoPointsArr);
     setPoints([
       ...points,
