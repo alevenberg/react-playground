@@ -1,5 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
+import { useState } from 'react';
 
 // https://www.youtube.com/watch?v=ixgxx_um8r8&t=1s
 const files = {
@@ -31,17 +32,25 @@ const files = {
   ]
 };
 
-function Entry({entry, depth}) {
-  return <div>{entry.name} 
-  <div style={{paddingLeft: `${depth*10}px`}}>
-  {entry.children?.map((entry)=>(<Entry entry={entry} depth={depth+1}/>))}</div>
-  </div>;
+function Entry({ entry, depth }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  return <div>
+    {entry.children ? (
+      <button className="entry" onClick={() => setIsExpanded(!isExpanded)}>
+        {isExpanded ? '-' : '+'} {entry.name} </button>) :
+      (<div> {entry.name} </div>)}
+    {isExpanded &&
+      <div style={{ paddingLeft: `${depth * 10}px` }}>
+        {entry.children?.map((entry) => (<Entry entry={entry} depth={depth + 1} />))}</div>}
+  </div>
+    ;
 }
 
 function App() {
   return (
     <div className="App">
-      {files.children.map((entry)=> (<Entry entry={entry} depth={1}/>))}
+      {files.children.map((entry) => (<Entry entry={entry} depth={1} />))}
     </div>
   );
 }
