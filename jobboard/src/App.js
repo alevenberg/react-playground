@@ -9,22 +9,16 @@ import {
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import axios from 'axios'
 
-const queryClient = new QueryClient()
-
-export default function App() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <Example />
-    </QueryClientProvider>
-  )
-}
+const queryClient = new QueryClient();
+const PAGE_SIZE = 6;
+const API_ENDPOINT = "https://hacker-news.firebaseio.com/v0/";
 
 function Example() {
   const { isPending, error, data, isFetching } = useQuery({
-    queryKey: ['repoData'],
+    queryKey: ['jobs'],
     queryFn: () =>
       axios
-        .get('https://api.github.com/repos/tannerlinsley/react-query')
+        .get(`${API_ENDPOINT}/jobstories.json`)
         .then((res) => res.data),
   })
 
@@ -34,16 +28,25 @@ function Example() {
 
   return (
     <div>
-      <h1>{data.name}</h1>
+      {/* <h1>{data.name}</h1>
       <p>{data.description}</p>
       <strong>👀 {data.subscribers_count}</strong>{' '}
       <strong>✨ {data.stargazers_count}</strong>{' '}
-      <strong>🍴 {data.forks_count}</strong>
+      <strong>🍴 {data.forks_count}</strong> */}
+      <div><pre>{JSON.stringify(data, null, 2)}</pre></div>;
       <div>{isFetching ? 'Updating...' : ''}</div>
       <ReactQueryDevtools initialIsOpen />
     </div>
   )
 }
 
-const rootElement = document.getElementById('root')
-ReactDOM.createRoot(rootElement).render(<App />)
+
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Example />
+    </QueryClientProvider>
+  )
+}
+
+export default App;
