@@ -1,0 +1,10 @@
+# Features
+- Filtering
+- Autocomplete search
+- Map
+- Similar companies
+# Reminders
+
+https://egghead.io/lessons/react-use-create-react-app-to-setup-a-simple-react-app
+https://www.codecademy.com/courses/react-101/lessons/your-first-react-component/exercises/review
+https://www.coursera.org/learn/react-basics?specialization=meta-ios-developer&utm_source=gg&utm_medium=sem&utm_campaign=B2C_NAMER_meta-ios-developer_meta_FTCOF_professional-certificates_facebook-meta-country-US-country-CA&utm_content=B2C&campaignid=18179467850&adgroupid=151371186626&device=c&keyword=&matchtype=&network=g&devicemodel=&adpostion=&creativeid=667273749806&hide_mobile_promo&gad_source=1&gclid=CjwKCAjw26KxBhBDEiwAu6KXt-7-qAdH8y_TuVz5bdDQYMukrTWu45uW7wZJu_wnGHkQrKZU_DjEtxoCaIAQAvD_BwE
