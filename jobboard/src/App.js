@@ -11,14 +11,15 @@ import axios from 'axios'
 
 const queryClient = new QueryClient();
 const PAGE_SIZE = 6;
-const API_ENDPOINT = "https://hacker-news.firebaseio.com/v0/";
+const API_ENDPOINT = "https://hacker-news.firebaseio.com/v0";
 
-function Example() {
+function Example(props) {
+  console.log(props);
   const { isPending, error, data, isFetching } = useQuery({
-    queryKey: ['jobs'],
+    queryKey: [props.id],
     queryFn: () =>
       axios
-        .get(`${API_ENDPOINT}/jobstories.json`)
+        .get(props.endpoint)
         .then((res) => res.data),
   })
 
@@ -28,11 +29,6 @@ function Example() {
 
   return (
     <div>
-      {/* <h1>{data.name}</h1>
-      <p>{data.description}</p>
-      <strong>👀 {data.subscribers_count}</strong>{' '}
-      <strong>✨ {data.stargazers_count}</strong>{' '}
-      <strong>🍴 {data.forks_count}</strong> */}
       <div><pre>{JSON.stringify(data, null, 2)}</pre></div>;
       <div>{isFetching ? 'Updating...' : ''}</div>
       <ReactQueryDevtools initialIsOpen />
@@ -44,7 +40,9 @@ function Example() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Example />
+      {console.log(`${API_ENDPOINT}/jobstories.json`)}
+      <Example id="job_id" endpoint={`${API_ENDPOINT}/jobstories.json`} />
+      <Example id="job" endpoint={`${API_ENDPOINT}/item/40146937.json`} />
     </QueryClientProvider>
   )
 }
