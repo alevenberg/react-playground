@@ -97,4 +97,28 @@ class App6 extends React.Component {
   }
 }
 
-export default App6
+class App7 extends React.Component {
+  constructor() {
+    super();
+    this.state = { a: '' }
+    this.state = { b: '' }
+  }
+  update(e) {
+    this.setState({
+      a: this.refs.a.value,
+      b: this.refs.b.value,
+    })
+  }
+  render() {
+    return (<div>
+      <input ref="a" type="text"
+        onChange={this.update.bind(this)} />
+      {this.state.a}
+      <hr />
+      <input ref="b" type="text"
+        onChange={this.update.bind(this)} />
+      {this.state.b}
+    </div >)
+  }
+}
+export default App7
