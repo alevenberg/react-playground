@@ -66,4 +66,35 @@ class Heart extends React.Component {
 }
 const Button = (props) => <button> {props.children} </button>
 
-export default App5
+class App6 extends React.Component {
+  constructor() {
+    super();
+    this.state = { currentEvent: '----' };
+    this.update = this.update.bind(this);
+  }
+
+  update(e) {
+    this.setState({ currentEvent: e.type })
+  }
+
+  render() {
+    return (<>
+      <textarea cols="30" rows="10"
+        onFocus={this.update}
+        onBlur={this.update}
+        onMouseDown={this.update}
+        onDoubleClick={this.update}
+        onTouchStart={this.update}
+        onTouchMove={this.update}
+        onTouchEnd={this.update}
+        onKeyUp={this.update}
+        onPaste={this.update}
+        onCopy={this.update}
+        onCut={this.update}>
+
+      </textarea>
+      <h1>{this.state.currentEvent}</h1> </>)
+  }
+}
+
+export default App6
