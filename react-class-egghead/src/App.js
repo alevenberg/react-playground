@@ -32,17 +32,21 @@ class App4 extends React.Component {
   render() {
     let txt = this.props.txt;
     return (<><h1> {this.props.txt} </h1>
-      <input type="text" onChange={this.update.bind(this)}>
-      </input>
+      <input type="text" onChange={this.update.bind(this)} />
+      <Widget update={this.update.bind(this)} />
+      <Widget update={this.update.bind(this)} />
+      <Widget update={this.update.bind(this)} />
       <h2> {txt}</h2>
       <h2> {this.state.txt}</h2>
     </>)
   }
 }
 
-App4.propTypes = {
-  WebTransportDatagramDuplexStream: PropTypes.string,
-  cat: PropTypes.bigint.isRequired,
-}
+const Widget = (props) => <input type="text" onChange={props.update} />
+
+// App4.propTypes = {
+// txt: PropTypes.string,
+// cat: PropTypes.bigint,
+// }
 
 export default App4
