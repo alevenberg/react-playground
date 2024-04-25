@@ -49,4 +49,21 @@ const Widget = (props) => <input type="text" onChange={props.update} />
 // cat: PropTypes.bigint,
 // }
 
-export default App4
+class App5 extends React.Component {
+  render() {
+    return (<>
+      <Button>I <Heart></Heart>React </Button>
+    </>)
+  }
+}
+
+class Heart extends React.Component {
+  render() {
+    return (<>
+      <span> &hearts; </span>
+    </>)
+  }
+}
+const Button = (props) => <button> {props.children} </button>
+
+export default App5
