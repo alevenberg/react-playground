@@ -1,4 +1,3 @@
-import React from 'react'
 import {
   QueryClient,
   QueryClientProvider,
@@ -6,18 +5,19 @@ import {
 } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import axios from 'axios'
+import React, { useState, useRef, useEffect } from 'react'
 
 const queryClient = new QueryClient()
 const API_ENDPOINT = "https://randomuser.me/api/"
-const PAGE_SIZE = 10
+const PAGE_SIZE = 100
 
 // https://randomuser.me/documentation#pagination
-function Example() {
+function Users(props) {
   const { isPending, error, data, isFetching } = useQuery({
-    queryKey: ['repoData'],
+    queryKey: [`pagedData-${props.currentPage}`],
     queryFn: () =>
       axios
-        .get(`${API_ENDPOINT}?page={0}&results={10}&seed=abc`)
+        .get(`${API_ENDPOINT}?page=${props.currentPage}&results=${props.pageSize}&seed=abc`)
         .then((res) => res.data),
   })
 
@@ -29,15 +29,25 @@ function Example() {
     <div>
       <pre>{JSON.stringify(data, null, 2)}</pre>
       <div>{isFetching ? 'Updating...' : ''}</div>
+      <p>Current page: {props.currentPage}</p>
+
+      <button disabled={(props.currentPage <= 1)} onClick={() => {
+        props.setCurrentPage(old => old - 1)
+      }}>Previous</button>
+      <button onClick={() => {
+        props.setCurrentPage(old => old + 1)
+      }}>Next</button>
       <ReactQueryDevtools initialIsOpen />
-    </div>
+    </div >
   )
 }
 
 export default function App() {
+  const [currentPage, setCurrentPage] = useState(1);
+
   return (
     <QueryClientProvider client={queryClient}>
-      <Example />
+      <Users currentPage={currentPage} pageSize={PAGE_SIZE} setCurrentPage={setCurrentPage} />
     </QueryClientProvider>
   )
 }

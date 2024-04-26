@@ -62,8 +62,6 @@ function JobPosting(props) {
       keepPreviousData: true
     })
 
-  // return <p key={props.job_id}>{props.job_id}</p>
-
   return (
     <div>
       {isLoading ? (
