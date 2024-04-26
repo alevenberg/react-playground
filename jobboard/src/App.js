@@ -9,6 +9,7 @@ import {
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import axios from 'axios'
 import { useEffect, useState } from 'react';
+import './App.css';
 
 const queryClient = new QueryClient();
 const PAGE_SIZE = 6;
@@ -71,7 +72,7 @@ function JobPosting(props) {
       ) : (
         <div className="post" role='listitem'>
           <h2 className="post__title">
-            {data?.url ? (<a href={data.url} target="_blank" rel="noopener">{data?.title}</a>) : (data?.title)}
+            {data?.url ? (<a className="post__title__link" href={data.url} target="_blank" rel="noopener">{data?.title}</a>) : (data?.title)}
           </h2>
           <p> By {data?.by} &middot; {' '}
             {new Date(data.time * 1000).toLocaleString()}</p>
@@ -81,8 +82,6 @@ function JobPosting(props) {
     </div >
   )
 }
-// <div>Hi {props.job_id}
-// {data}</div>
 
 function JobIds(props) {
   // console.log(props);
@@ -104,14 +103,14 @@ function JobIds(props) {
 
   return (
     <div>
-      <h1>{"JobIds"}</h1>
+      <h1 className='title'>{"Hacker News Jobs Board"}</h1>
 
       {isLoading ? (
-        <div>Loading...</div>
+        <div className='loading'>Loading...</div>
       ) : isError ? (
         <div>Error: {error.message}</div>
       ) : (
-        <div role="list">
+        <div className="jobs" role="list">
           {/* <div><pre>{JSON.stringify(data, null, 2)}</pre></div> */}
           {
             getSlice(data, page).map(job_id => (
@@ -122,8 +121,10 @@ function JobIds(props) {
           }
         </div>
       )}
-      <span>Current Page: {page + 1}</span>
+      <span className="page-info">Current Page: {page + 1} / {data?.length / PAGE_SIZE}</span>
       <button
+        className='previous-button'
+
         onClick={() => setPage(old => Math.max(old - 1, 0))}
         disabled={page === 0}
       >
@@ -131,6 +132,7 @@ function JobIds(props) {
 
       </button>{' '}
       <button
+        className='next-button'
         onClick={() => {
           if (data && data.length > (page + 1) * PAGE_SIZE) {
             console.log(!data.length);
@@ -142,7 +144,7 @@ function JobIds(props) {
       >
         Next Page
       </button>
-      {isFetching ? <span> Loading...</span> : null} {' '}
+      {isFetching ? <span className="loading"> Loading...</span> : null} {' '}
     </div >
   )
 }
