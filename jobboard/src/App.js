@@ -59,6 +59,7 @@ function JobPosting(props) {
         axios
           .get(`${API_ENDPOINT}/item/${props.job_id}.json`)
           .then((res) => res.data),
+      keepPreviousData: true
     })
 
   // return <p key={props.job_id}>{props.job_id}</p>
