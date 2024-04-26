@@ -46,29 +46,40 @@ function getSlice(data, page) {
 }
 
 function JobPosting(props) {
-
+  console.log(props.job_id)
   const { isLoading,
     isError,
     error,
     data,
     isFetching,
     isPreviousData } = useQuery({
-      queryKey: ["Job"],
+      // Must specify key to avoid caching.
+      queryKey: [`Job-${props.job_id}`],
       queryFn: () =>
         axios
           .get(`${API_ENDPOINT}/item/${props.job_id}.json`)
           .then((res) => res.data),
-      keepPreviousData: true
     })
   console.log(data)
 
   // return <p key={props.job_id}>{props.job_id}</p>
 
-
-  return <div><pre>{JSON.stringify(data, null, 2)}</pre></div>
-  // <div>Hi {props.job_id}
-  // {data}</div>
+  return (
+    <div>
+      {isLoading ? (
+        <div>Loading...</div>
+      ) : isError ? (
+        <div>Error: {error.message}</div>
+      ) : (
+        <div><pre>{JSON.stringify(data, null, 2)}</pre></div>
+      )}
+      {isFetching ? <span> Loading...</span> : null} {' '}
+    </div >
+  )
 }
+// <div>Hi {props.job_id}
+// {data}</div>
+
 function JobIds(props) {
   // console.log(props);
   const [page, setPage] = React.useState(0)
