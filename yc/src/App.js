@@ -1,68 +1,45 @@
-import './App.css';
+import React from 'react'
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+} from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import axios from 'axios'
 
-const PAGESIZE = 20;
-const API_ENDPOINT = "https://randomuser.me/api?results=20";
+const queryClient = new QueryClient()
 
-function Todos() {
-  const [page, setPage] = React.useState(0)
-
-  const fetchProjects = (page = 0) => fetch('/api/projects?page=' + page).then((res) => res.json())
-
-  const {
-    isLoading,
-    isError,
-    error,
-    data,
-    isFetching,
-    isPreviousData,
-  } = useQuery({
-    queryKey: ['projects', page],
-    queryFn: () => fetchProjects(page),
-    keepPreviousData: true
+function Example() {
+  const { isPending, error, data, isFetching } = useQuery({
+    queryKey: ['repoData'],
+    queryFn: () =>
+      axios
+        .get('https://api.github.com/repos/tannerlinsley/react-query')
+        .then((res) => res.data),
   })
 
+  if (isPending) return 'Loading...'
+
+  if (error) return 'An error has occurred: ' + error.message
+
+  console.log(data);
   return (
     <div>
-      {isLoading ? (
-        <div>Loading...</div>
-      ) : isError ? (
-        <div>Error: {error.message}</div>
-      ) : (
-        <div>
-          {data.projects.map(project => (
-            <p key={project.id}>{project.name}</p>
-          ))}
-        </div>
-      )}
-      <span>Current Page: {page + 1}</span>
-      <button
-        onClick={() => setPage(old => Math.max(old - 1, 0))}
-        disabled={page === 0}
-      >
-        Previous Page
-      </button>{' '}
-      <button
-        onClick={() => {
-          if (!isPreviousData && data.hasMore) {
-            setPage(old => old + 1)
-          }
-        }}
-        // Disable the Next Page button until we know a next page is available
-        disabled={isPreviousData || !data?.hasMore}
-      >
-        Next Page
-      </button>
-      {isFetching ? <span> Loading...</span> : null}{' '}
+      <h1>{data.name}</h1>
+      <p>{data.description}</p>
+      <strong>👀 {data.subscribers_count}</strong>{' '}
+      <strong>✨ {data.stargazers_count}</strong>{' '}
+      <strong>🍴 {data.forks_count}</strong>
+      <div>{isFetching ? 'Updating...' : ''}</div>
+      <ReactQueryDevtools initialIsOpen />
     </div>
   )
 }
 
-function App() {
+export default function App() {
   return (
-    <div className="App">
-      <h1>HI</h1>
-    </div>
-  );
+    <QueryClientProvider client={queryClient}>
+      <Example />
+    </QueryClientProvider>
+  )
 }
-
-export default App;
