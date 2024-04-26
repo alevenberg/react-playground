@@ -8,13 +8,16 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import axios from 'axios'
 
 const queryClient = new QueryClient()
+const API_ENDPOINT = "https://randomuser.me/api/"
+const PAGE_SIZE = 10
 
+// https://randomuser.me/documentation#pagination
 function Example() {
   const { isPending, error, data, isFetching } = useQuery({
     queryKey: ['repoData'],
     queryFn: () =>
       axios
-        .get('https://api.github.com/repos/tannerlinsley/react-query')
+        .get(`${API_ENDPOINT}?page={0}&results={10}&seed=abc`)
         .then((res) => res.data),
   })
 
@@ -22,14 +25,9 @@ function Example() {
 
   if (error) return 'An error has occurred: ' + error.message
 
-  console.log(data);
   return (
     <div>
-      <h1>{data.name}</h1>
-      <p>{data.description}</p>
-      <strong>👀 {data.subscribers_count}</strong>{' '}
-      <strong>✨ {data.stargazers_count}</strong>{' '}
-      <strong>🍴 {data.forks_count}</strong>
+      <pre>{JSON.stringify(data, null, 2)}</pre>
       <div>{isFetching ? 'Updating...' : ''}</div>
       <ReactQueryDevtools initialIsOpen />
     </div>
