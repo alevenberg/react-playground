@@ -9,7 +9,16 @@ import React, { useState, useRef, useEffect } from 'react'
 
 const queryClient = new QueryClient()
 const API_ENDPOINT = "https://randomuser.me/api/"
-const PAGE_SIZE = 100
+const PAGE_SIZE = 10
+
+function User(props) {
+  return <div key={props.user["login"]["uuid"]}>
+    <img src={props.user.picture.thumbnail} />
+    <p>   {`${props.user.name.title} ${props.user.name.first} ${props.user.name.last}`}
+    </p>
+    <p>{props.user.email}</p></div>
+
+}
 
 // https://randomuser.me/documentation#pagination
 function Users(props) {
@@ -27,7 +36,12 @@ function Users(props) {
 
   return (
     <div>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
+      {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
+      {data.results.map(user => (
+        <div >
+          <User user={user} />
+        </div>
+      ))}
       <div>{isFetching ? 'Updating...' : ''}</div>
       <p>Current page: {props.currentPage}</p>
 
