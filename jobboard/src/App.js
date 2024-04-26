@@ -15,7 +15,7 @@ const PAGE_SIZE = 6;
 const API_ENDPOINT = "https://hacker-news.firebaseio.com/v0";
 
 function Example(props) {
-  console.log(props);
+  // console.log(props);
   const { isPending, error, data, isFetching } = useQuery({
     queryKey: [props.id],
     queryFn: () =>
@@ -45,8 +45,32 @@ function getSlice(data, page) {
   return data.slice(start, end);
 }
 
+function JobPosting(props) {
+
+  const { isLoading,
+    isError,
+    error,
+    data,
+    isFetching,
+    isPreviousData } = useQuery({
+      queryKey: ["Job"],
+      queryFn: () =>
+        axios
+          .get(`${API_ENDPOINT}/item/${props.job_id}.json`)
+          .then((res) => res.data),
+      keepPreviousData: true
+    })
+  console.log(data)
+
+  // return <p key={props.job_id}>{props.job_id}</p>
+
+
+  return <div><pre>{JSON.stringify(data, null, 2)}</pre></div>
+  // <div>Hi {props.job_id}
+  // {data}</div>
+}
 function JobIds(props) {
-  console.log(props);
+  // console.log(props);
   const [page, setPage] = React.useState(0)
 
   const { isLoading,
@@ -73,10 +97,12 @@ function JobIds(props) {
         <div>Error: {error.message}</div>
       ) : (
         <div>
-          <div><pre>{JSON.stringify(data, null, 2)}</pre></div>
+          {/* <div><pre>{JSON.stringify(data, null, 2)}</pre></div> */}
           {
             getSlice(data, page).map(job_id => (
-              <p key={job_id}>{job_id}</p>
+              <div>
+                <JobPosting job_id={job_id} />
+              </div>
             ))
           }
         </div>
@@ -110,8 +136,8 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       {/* {console.log(`${API_ENDPOINT}/jobstories.json`)} */}
-      <Example id="job_ids" endpoint={`${API_ENDPOINT}/jobstories.json`} />
-      <Example id="job-40146937" endpoint={`${API_ENDPOINT}/item/40146937.json`} />
+      {/* <Example id="job_ids" endpoint={`${API_ENDPOINT}/jobstories.json`} /> */}
+      {/* <Example id="job-40146937" endpoint={`${API_ENDPOINT}/item/40146937.json`} /> */}
       <JobIds />
     </QueryClientProvider>
   )
