@@ -59,7 +59,6 @@ function JobPosting(props) {
           .get(`${API_ENDPOINT}/item/${props.job_id}.json`)
           .then((res) => res.data),
     })
-  console.log(data)
 
   // return <p key={props.job_id}>{props.job_id}</p>
 
@@ -72,8 +71,10 @@ function JobPosting(props) {
       ) : (
         <div className="post" role='listitem'>
           <h2 className="post__title">
-            {data.url ? (<a href={data.url} target="_blank" rel="noopener">{data.title}</a>) : (data.title)}
-          </h2>  <pre>{JSON.stringify(data, null, 2)}</pre>
+            {data?.url ? (<a href={data.url} target="_blank" rel="noopener">{data?.title}</a>) : (data?.title)}
+          </h2>
+          <p> By {data?.by} &middot; {' '}
+            {new Date(data.time * 1000).toLocaleString()}</p>
         </div>
       )}
       {isFetching ? <span> Loading...</span> : null} {' '}
