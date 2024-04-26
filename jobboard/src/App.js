@@ -46,7 +46,6 @@ function getSlice(data, page) {
 }
 
 function JobPosting(props) {
-  console.log(props.job_id)
   const { isLoading,
     isError,
     error,
@@ -71,7 +70,11 @@ function JobPosting(props) {
       ) : isError ? (
         <div>Error: {error.message}</div>
       ) : (
-        <div><pre>{JSON.stringify(data, null, 2)}</pre></div>
+        <div className="post" role='listitem'>
+          <h2 className="post__title">
+            {data.url ? (<a href={data.url} target="_blank" rel="noopener">{data.title}</a>) : (data.title)}
+          </h2>  <pre>{JSON.stringify(data, null, 2)}</pre>
+        </div>
       )}
       {isFetching ? <span> Loading...</span> : null} {' '}
     </div >
@@ -107,7 +110,7 @@ function JobIds(props) {
       ) : isError ? (
         <div>Error: {error.message}</div>
       ) : (
-        <div>
+        <div role="list">
           {/* <div><pre>{JSON.stringify(data, null, 2)}</pre></div> */}
           {
             getSlice(data, page).map(job_id => (
