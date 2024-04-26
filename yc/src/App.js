@@ -1,23 +1,66 @@
-import logo from './logo.svg';
 import './App.css';
+
+const PAGESIZE = 20;
+const API_ENDPOINT = "https://randomuser.me/api?results=20";
+
+function Todos() {
+  const [page, setPage] = React.useState(0)
+
+  const fetchProjects = (page = 0) => fetch('/api/projects?page=' + page).then((res) => res.json())
+
+  const {
+    isLoading,
+    isError,
+    error,
+    data,
+    isFetching,
+    isPreviousData,
+  } = useQuery({
+    queryKey: ['projects', page],
+    queryFn: () => fetchProjects(page),
+    keepPreviousData: true
+  })
+
+  return (
+    <div>
+      {isLoading ? (
+        <div>Loading...</div>
+      ) : isError ? (
+        <div>Error: {error.message}</div>
+      ) : (
+        <div>
+          {data.projects.map(project => (
+            <p key={project.id}>{project.name}</p>
+          ))}
+        </div>
+      )}
+      <span>Current Page: {page + 1}</span>
+      <button
+        onClick={() => setPage(old => Math.max(old - 1, 0))}
+        disabled={page === 0}
+      >
+        Previous Page
+      </button>{' '}
+      <button
+        onClick={() => {
+          if (!isPreviousData && data.hasMore) {
+            setPage(old => old + 1)
+          }
+        }}
+        // Disable the Next Page button until we know a next page is available
+        disabled={isPreviousData || !data?.hasMore}
+      >
+        Next Page
+      </button>
+      {isFetching ? <span> Loading...</span> : null}{' '}
+    </div>
+  )
+}
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>HI</h1>
     </div>
   );
 }
