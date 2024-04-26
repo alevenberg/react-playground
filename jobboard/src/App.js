@@ -91,13 +91,13 @@ function JobIds(props) {
       </button>{' '}
       <button
         onClick={() => {
-          console.log(!data.length);
-          // if () {
-          setPage(old => old + 1)
-          // }
+          if (data && data.length > (page + 1) * PAGE_SIZE) {
+            console.log(!data.length);
+            setPage(old => old + 1)
+          }
         }}
-      // Disable the Next Page button until we know a next page is available
-      // disabled={}
+        // Disable the Next Page button until we know a next page is available
+        disabled={(data && data.length <= (page + 1) * PAGE_SIZE)}
       >
         Next Page
       </button>
