@@ -47,13 +47,15 @@ function Users(props) {
   if (error) return 'An error has occurred: ' + error.message
 
   return <div>
+    <p>Showing X of X companies\n PAGE{props.currentPage} / {data.totalPages} </p>
+    <button disabled={(props.currentPage <= 1)} onClick={() => props.setCurrentPage((old) => old - 1)}>Previous</button>
+    <button disabled={(props.currentPage > data.totalPages)} onClick={() => props.setCurrentPage((old) => old + 1)}>Next</button>
+
     <div className="companies" role="list">{data.companies.map(company => ((
       <Company key={company.id} company={company} />
     )))}
     </div>
-    <p>Current page {props.currentPage} / {data.totalPages} </p>
-    <button disabled={(props.currentPage <= 1)} onClick={() => props.setCurrentPage((old) => old - 1)}>Previous</button>
-    <button disabled={(props.currentPage > data.totalPages)} onClick={() => props.setCurrentPage((old) => old + 1)}>Next</button></div>;
+  </div>;
 }
 
 export default function App() {
@@ -61,11 +63,12 @@ export default function App() {
   const [queryParam, setQueryParam] = useState("");
 
   return (
-    <div className='root'>
+    <div className='app'>
       <h1 className="title"> Startup Directory </h1>
-      <div className='searchBox'>
-        <input onChange={e => { setQueryParam(e.target.value) }} name="search" type="text" placeholder="Search..."></input >
-      </div>
+      <div className="search-box">
+        <div className="search-input">
+          <input onChange={e => { setQueryParam(e.target.value) }} name="search" type="text" placeholder="Search..."></input >
+        </div></div>
       <QueryClientProvider client={queryClient}>
         <Users currentPage={currentPage} pageSize={PAGE_SIZE} setCurrentPage={setCurrentPage} queryParam={queryParam} />
       </QueryClientProvider>
