@@ -84,8 +84,11 @@ function Companies(props) {
   if (error) return 'An error has occurred: ' + error.message
 
   function getMessage() {
-    const total_companies = totalPages * PAGE_SIZE;
+    let total_companies = totalPages * PAGE_SIZE;
     const total_companies_on_page = Math.min(total_companies, companies.length);
+    if (props.isEndOfResults) {
+      total_companies = companies.length;
+    }
     console.log("total_companies".concat(total_companies));
     let total_companies_text = `Showing ${total_companies_on_page} of `;
     if (total_companies === 1) {
