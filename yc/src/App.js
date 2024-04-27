@@ -33,7 +33,7 @@ function Company(props) {
 }
 
 // https://randomuser.me/documentation#pagination
-function Users(props) {
+function Companies(props) {
   console.log(`${API_ENDPOINT}?page=${props.currentPage}&q=${props.queryParam}`)
   const { isPending, error, data, isFetching } = useQuery({
     queryKey: [`pagedData - ${props.currentPage} `],
@@ -90,7 +90,7 @@ export default function App() {
         <input onChange={e => { setQueryParam(e.target.value) }} name="search" type="text" placeholder="Search..."></input >
       </div>
       <QueryClientProvider client={queryClient}>
-        <Users currentPage={currentPage} pageSize={PAGE_SIZE} setCurrentPage={setCurrentPage} queryParam={queryParam} />
+        <Companies currentPage={currentPage} pageSize={PAGE_SIZE} setCurrentPage={setCurrentPage} queryParam={queryParam} />
       </QueryClientProvider>
     </div >
   )
