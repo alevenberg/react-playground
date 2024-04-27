@@ -6,6 +6,7 @@ import {
 import axios from 'axios'
 import React, { useState, useRef, useEffect } from 'react'
 import './App.css';
+import { v4 as uuidv4 } from 'uuid';
 
 const queryClient = new QueryClient()
 const API_ENDPOINT = "https://api.ycombinator.com/v0.1/companies"
@@ -32,18 +33,17 @@ function Company(props) {
   </div >
 }
 
-// https://randomuser.me/documentation#pagination
 function Companies(props) {
   const [companies, setCompanies] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
 
   const { isPending, error, data, isFetching } = useQuery({
-    queryKey: [`pagedData - ${props.currentPage} `],
+    queryKey: [`p=${props.currentPage}q=${props.queryParam}`],
     queryFn: () =>
       axios
         .get(`${API_ENDPOINT}?page=${props.currentPage}&q=${props.queryParam}`)
         .then((res) => {
-          console.log(companies)
+          // console.log(res.data.totalPages)
           const newCompanies = [...companies, ...res.data.companies];
           setCompanies(newCompanies);
           setTotalPages(res.data.totalPages);
@@ -51,12 +51,15 @@ function Companies(props) {
         }
         ),
   })
-  if (isPending) return <div className='loading'>Loading... </div>
+
+  if (isPending && companies.length == 0) {
+    return <div className='loading'>Loading... </div>
+  }
 
   if (error) return 'An error has occurred: ' + error.message
 
   function getMessage() {
-    const total_companies = data.totalPages * PAGE_SIZE;
+    const total_companies = totalPages * PAGE_SIZE;
     let total_companies_text = "";
     if (total_companies > 1000) {
       total_companies_text += "1000+";
@@ -77,17 +80,20 @@ function Companies(props) {
   }
 
   return <div>
+
     {/* <div className='status'>Sorry, no matching companies found</div> */}
     <div className='message'>Showing {(props.currentPage * PAGE_SIZE)}  of {getMessage()}</div>
     {/* <p> PAGE{props.currentPage} / {data.totalPages} </p> */}
     {/* <button disabled={(props.currentPage <= 1)} onClick={() => props.setCurrentPage((old) => old - 1)}>Previous</button> */}
     {/* <button disabled={(props.currentPage > data.totalPages)} onClick={() => props.setCurrentPage((old) => old + 1)}>Next</button> */}
 
-    <div className="companies" role="list">{companies.map(company => ((
-      <Company key={company.id} company={company} />
+    <div className="companies" role="list">{companies.map((company, idx) => ((
+      <Company key={uuidv4()} company={company} />
     )))}
 
     </div>
+    {(isPending) && <div className='loading'>Loading... </div>}
+
     <button disabled={(props.currentPage > totalPages)} onClick={loadMore}>Load more...</button>
   </div >;
 }
