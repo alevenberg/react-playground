@@ -56,7 +56,7 @@
    overflow: hidden;
    box-sizing: border-box;
    display: grid;
-   row-gap: 16px;
+   row-gap: 0px;
  }
 
  .company {
@@ -94,7 +94,7 @@
    max-width: 100%;
  }
 
- a {
+ .company a {
    position: absolute;
    top: 0px;
    left: 0px;
