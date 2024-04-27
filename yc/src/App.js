@@ -34,6 +34,7 @@ function Company(props) {
 
 // https://randomuser.me/documentation#pagination
 function Companies(props) {
+  const [companies, setCompanies] = useState([]);
   console.log(`${API_ENDPOINT}?page=${props.currentPage}&q=${props.queryParam}`)
   const { isPending, error, data, isFetching } = useQuery({
     queryKey: [`pagedData - ${props.currentPage} `],
@@ -43,7 +44,7 @@ function Companies(props) {
         .then((res) => res.data),
   })
 
-  if (isPending) return 'Loading...'
+  if (isPending) return <div className='loading'>Loading... </div>
 
   if (error) return 'An error has occurred: ' + error.message
 
@@ -63,6 +64,11 @@ function Companies(props) {
     return total_companies_text;
   }
 
+  function loadMore(e) {
+    e.preventDefault();
+    props.setCurrentPage((old) => old + 1);
+  }
+
   return <div>
     {/* <div className='status'>Sorry, no matching companies found</div> */}
     <div className='message'>Showing {(props.currentPage * PAGE_SIZE)}  of {getMessage()}</div>
@@ -73,10 +79,10 @@ function Companies(props) {
     <div className="companies" role="list">{data.companies.map(company => ((
       <Company key={company.id} company={company} />
     )))}
-      <button disabled={(props.currentPage > data.totalPages)} onClick={() => props.setCurrentPage((old) => old + 1)}>Load more...</button>
 
     </div>
-  </div>;
+    <button disabled={(props.currentPage > data.totalPages)} onClick={loadMore}>Load more...</button>
+  </div >;
 }
 
 export default function App() {

@@ -1,10 +1,3 @@
-.title {
-    font-size: 24px;
-    font-weight: bold;
-    color: #ff6600;
-    margin-bottom: 24px;
-}
-
 /* Search bar styling */
 .search {
     background-color: #fff;
@@ -76,64 +69,10 @@ a:hover {
 }
 
 
-.companies {
-    display: grid;
-    row-gap: 16px;
-}
 
-.company {
-    background-color: #fff;
-    border: 1px solid #dcdcdc;
-    border-radius: 4px;
-    padding: 16px;
-    display: grid;
-    row-gap: 8px;
-}
 
 .root {
     padding: 24px;
-}
-
-.company-name {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    font-weight: 700;
-    margin-right: 10px;
-    font-size: 18px;
-}
-
-.company-location {
-    font-size: 12px;
-    margin-right: 10px;
-}
-
-.company {
-    max-width: 100%;
-    height: auto;
-    margin-left: 70px;
-    vertical-align: middle;
-    display: flex;
-    align-items: flex-start;
-
-}
-
-.company-child {
-    flex: 1;
-
-}
-
-.company-child:first-child {
-    align-self: flex-start;
-    width: 20%;
-}
-
-.company-image {
-    width: 75px;
-    height: 75px;
-    margin-right: 5px;
-    border-radius: 50%;
-    overflow: hidden;
-    border-radius: 50%;
-    max-width: 100%;
 }
 
 
