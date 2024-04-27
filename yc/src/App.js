@@ -36,12 +36,12 @@ function Company(props) {
 function Companies(props) {
   const [companies, setCompanies] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
-
-  const { isPending, error, data, isFetching } = useQuery({
-    queryKey: [`p=${props.currentPage}q=${props.queryParam}`],
+  const currentPage = props.currentPage;
+  const { isPending, error } = useQuery({
+    queryKey: [currentPage],
     queryFn: () =>
       axios
-        .get(`${API_ENDPOINT}?page=${props.currentPage}&q=${props.queryParam}`)
+        .get(`${API_ENDPOINT}?page=${currentPage}`)
         .then((res) => {
           // console.log(res.data.totalPages)
           const newCompanies = [...companies, ...res.data.companies];
@@ -83,10 +83,6 @@ function Companies(props) {
 
     {/* <div className='status'>Sorry, no matching companies found</div> */}
     <div className='message'>Showing {(props.currentPage * PAGE_SIZE)}  of {getMessage()}</div>
-    {/* <p> PAGE{props.currentPage} / {data.totalPages} </p> */}
-    {/* <button disabled={(props.currentPage <= 1)} onClick={() => props.setCurrentPage((old) => old - 1)}>Previous</button> */}
-    {/* <button disabled={(props.currentPage > data.totalPages)} onClick={() => props.setCurrentPage((old) => old + 1)}>Next</button> */}
-
     <div className="companies" role="list">{companies.map((company, idx) => ((
       <Company key={uuidv4()} company={company} />
     )))}
