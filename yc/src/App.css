@@ -50,14 +50,23 @@ a:hover {
   row-gap: 8px;
 }
 
+.root {
+  padding: 24px;
+}
+
 .searchBox {
-  margin-bottom: 25px;
-  padding: 20px;
+  /* margin-bottom: 25px; */
+  /* padding: 20px; */
   background: #fdfdf8;
   border: 1px solid #c6c6c6;
-  padding: 10px;
+  padding: 20px;
+  margin-bottom: 25px;
+  border-radius: 8px;
+  overflow: hidden;
+  display: block;
+
   width: 100%;
-  font-size: 16px;
+  /* font-size: 16px; */
   line-height: normal;
   border-radius: 4px
 }
@@ -79,6 +88,37 @@ input[type="text"] {
   display: grid;
   row-gap: 8px;
 }
+
+.company-name {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  margin-right: 10px;
+  font-size: 18px;
+}
+
+.company-location {
+  font-size: 12px;
+  margin-right: 10px;
+}
+
+.company {
+  max-width: 100%;
+  height: auto;
+  margin-left: 70px;
+  display: inline-block;
+  vertical-align: middle;
+  display: inline-block;
+}
+
+.company-image {
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+  overflow: hidden;
+  border-radius: 50%;
+  max-width: 100%;
+}
+
 
 .post__title {
   font-size: 16px;

@@ -12,26 +12,19 @@ const API_ENDPOINT = "https://api.ycombinator.com/v0.1/companies"
 const PAGE_SIZE = 10
 
 function Company(props) {
+  const regions = props.company.regions?.join(" · ");
+  console.log(regions);
   return <div key={"k-" + props.company.id} className="company" role="listitem" >
-    <p> {props.company.name}</p>
-    {
-      props.company.regions?.map(region => (
-        <p> {region}</p>
-      ))
-    }
-    <p>{props.company.oneLiner}</p>
-    <img src={props.company.smallLogoUrl} />
-    {/* <p>{props.company.name}</p> */}
+    <div>
+      <span className='company-name'> {props.company.name}</span>
+      <span className='company-location'> {regions} </span>
+    </div>
+    <div>
+      <span className='company-description'>{props.company.oneLiner}</span>
+    </div>
+    <img className="company-image" src={props.company.smallLogoUrl} />
+    {/* <pre>{JSON.stringify(props.company, null, 2)}</pre> */}
   </div >
-  //  <pre>{JSON.stringify(props.company, null, 2)}</pre>
-
-  //  <pre>{JSON.stringify(props.user, null, 2)}</pre>
-  // return <div key={props.user.login.uuid}>
-  //   <img src={props.user.picture.thumbnail} />
-  //   <p>   {`${ props.user.name.title } ${ props.user.name.first } ${ props.user.name.last } `}
-  //   </p>
-  //   <p>{props.user.email}</p></div>
-
 }
 
 // https://randomuser.me/documentation#pagination
@@ -49,9 +42,11 @@ function Users(props) {
 
   if (error) return 'An error has occurred: ' + error.message
 
-  return <div className="companies" role="list">{data.companies.map(company => ((
-    <Company key={company.id} company={company} />
-  )))}
+  return <div>
+    <div className="companies" role="list">{data.companies.map(company => ((
+      <Company key={company.id} company={company} />
+    )))}
+    </div>
     <p>Current page {props.currentPage} / {data.totalPages} </p>
     <button disabled={(props.currentPage <= 1)} onClick={() => props.setCurrentPage((old) => old - 1)}>Previous</button>
     <button disabled={(props.currentPage > data.totalPages)} onClick={() => props.setCurrentPage((old) => old + 1)}>Next</button></div>;
@@ -62,12 +57,14 @@ export default function App() {
   const [queryParam, setQueryParam] = useState("");
 
   return (
-    <><h1 className="title"> Startup Directory </h1>
+    <div className='root'>
+      <h1 className="title"> Startup Directory </h1>
       <div className='searchBox'>
         <input onChange={e => { setQueryParam(e.target.value) }} name="search" type="text" placeholder="Search..."></input >
       </div>
       <QueryClientProvider client={queryClient}>
         <Users currentPage={currentPage} pageSize={PAGE_SIZE} setCurrentPage={setCurrentPage} queryParam={queryParam} />
-      </QueryClientProvider></>
+      </QueryClientProvider>
+    </div >
   )
 }
