@@ -14,6 +14,7 @@ const PAGE_SIZE = 10
 function Company(props) {
   const regions = props.company.regions?.join(" · ");
   return <div key={"k-" + props.company.id} className="company" role="listitem" >
+    <a href={props.company.website}></a>
     <div className='company-child logo'>
       <img className="company-image" src={props.company.smallLogoUrl} />
     </div>
