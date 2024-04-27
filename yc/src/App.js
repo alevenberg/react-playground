@@ -66,9 +66,8 @@ export default function App() {
     <div className='app'>
       <h1 className="title"> Startup Directory </h1>
       <div className="search-box">
-        <div className="search-input">
-          <input onChange={e => { setQueryParam(e.target.value) }} name="search" type="text" placeholder="Search..."></input >
-        </div></div>
+        <input onChange={e => { setQueryParam(e.target.value) }} name="search" type="text" placeholder="Search..."></input >
+      </div>
       <QueryClientProvider client={queryClient}>
         <Users currentPage={currentPage} pageSize={PAGE_SIZE} setCurrentPage={setCurrentPage} queryParam={queryParam} />
       </QueryClientProvider>
