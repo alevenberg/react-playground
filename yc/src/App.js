@@ -35,15 +35,22 @@ function Company(props) {
 // https://randomuser.me/documentation#pagination
 function Companies(props) {
   const [companies, setCompanies] = useState([]);
-  console.log(`${API_ENDPOINT}?page=${props.currentPage}&q=${props.queryParam}`)
+  const [totalPages, setTotalPages] = useState(0);
+
   const { isPending, error, data, isFetching } = useQuery({
     queryKey: [`pagedData - ${props.currentPage} `],
     queryFn: () =>
       axios
         .get(`${API_ENDPOINT}?page=${props.currentPage}&q=${props.queryParam}`)
-        .then((res) => res.data),
+        .then((res) => {
+          console.log(companies)
+          const newCompanies = [...companies, ...res.data.companies];
+          setCompanies(newCompanies);
+          setTotalPages(res.data.totalPages);
+          return res.data;
+        }
+        ),
   })
-
   if (isPending) return <div className='loading'>Loading... </div>
 
   if (error) return 'An error has occurred: ' + error.message
@@ -76,12 +83,12 @@ function Companies(props) {
     {/* <button disabled={(props.currentPage <= 1)} onClick={() => props.setCurrentPage((old) => old - 1)}>Previous</button> */}
     {/* <button disabled={(props.currentPage > data.totalPages)} onClick={() => props.setCurrentPage((old) => old + 1)}>Next</button> */}
 
-    <div className="companies" role="list">{data.companies.map(company => ((
+    <div className="companies" role="list">{companies.map(company => ((
       <Company key={company.id} company={company} />
     )))}
 
     </div>
-    <button disabled={(props.currentPage > data.totalPages)} onClick={loadMore}>Load more...</button>
+    <button disabled={(props.currentPage > totalPages)} onClick={loadMore}>Load more...</button>
   </div >;
 }
 
