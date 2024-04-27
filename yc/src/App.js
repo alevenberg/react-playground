@@ -73,6 +73,8 @@ function Users(props) {
     <div className="companies" role="list">{data.companies.map(company => ((
       <Company key={company.id} company={company} />
     )))}
+      <button disabled={(props.currentPage > data.totalPages)} onClick={() => props.setCurrentPage((old) => old + 1)}>Load more...</button>
+
     </div>
   </div>;
 }

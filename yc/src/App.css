@@ -103,6 +103,24 @@
    display: inline;
  }
 
+
+ .company:hover {
+   text-decoration: none;
+   color: #000;
+   background-color: #fff;
+   transition: none;
+ }
+
+ button:not(:disabled) {
+   cursor: pointer;
+ }
+
+ button:hover {
+   background-color: #e65c00;
+ }
+
+
+
  /*
 
  .company {
