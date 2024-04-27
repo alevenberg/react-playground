@@ -111,6 +111,17 @@
    transition: none;
  }
 
+
+
+ button {
+   background-color: #ff6600;
+   border: none;
+   border-radius: 4px;
+   color: #fff;
+   margin-top: 20px;
+   padding: 8px 12px;
+ }
+
  button:not(:disabled) {
    cursor: pointer;
  }
