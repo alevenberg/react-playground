@@ -55,26 +55,6 @@ function Users(props) {
     <p>Current page {props.currentPage} / {data.totalPages} </p>
     <button disabled={(props.currentPage <= 1)} onClick={() => props.setCurrentPage((old) => old - 1)}>Previous</button>
     <button disabled={(props.currentPage > data.totalPages)} onClick={() => props.setCurrentPage((old) => old + 1)}>Next</button></div>;
-  // (
-  // <div>
-  //   {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
-  //   {data.companies.map(user => (
-  //     <div>
-  //       <User user={user} />
-  //     </div>
-  //   ))}
-  //   <div>{isFetching ? 'Updating...' : ''}</div>
-  //   <p>Current page: {props.currentPage}</p>
-
-  //   <button disabled={(props.currentPage <= 1)} onClick={() => {
-  //     props.setCurrentPage(old => old - 1)
-  //   }}>Previous</button>
-  //   <button onClick={() => {
-  //     props.setCurrentPage(old => old + 1)
-  //   }}>Next</button>
-  //   <ReactQueryDevtools initialIsOpen />
-  // </div >
-  // )
 }
 
 export default function App() {
@@ -83,7 +63,9 @@ export default function App() {
 
   return (
     <><h1 className="title"> Startup Directory </h1>
-      <input onChange={e => { setQueryParam(e.target.value) }} name="search" type="text" placeholder="Search..."></input >
+      <div className='searchBox'>
+        <input onChange={e => { setQueryParam(e.target.value) }} name="search" type="text" placeholder="Search..."></input >
+      </div>
       <QueryClientProvider client={queryClient}>
         <Users currentPage={currentPage} pageSize={PAGE_SIZE} setCurrentPage={setCurrentPage} queryParam={queryParam} />
       </QueryClientProvider></>
