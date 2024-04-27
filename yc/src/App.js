@@ -13,16 +13,20 @@ const PAGE_SIZE = 10
 
 function Company(props) {
   const regions = props.company.regions?.join(" · ");
-  console.log(regions);
   return <div key={"k-" + props.company.id} className="company" role="listitem" >
-    <div>
-      <span className='company-name'> {props.company.name}</span>
-      <span className='company-location'> {regions} </span>
+    <div className='company-child logo'>
+      <img className="company-image" src={props.company.smallLogoUrl} />
     </div>
-    <div>
-      <span className='company-description'>{props.company.oneLiner}</span>
+    <div className='company-child information'>
+      <div>
+        <span className='company-name'> {props.company.name}</span>
+        <span className='company-location'> {regions} </span>
+      </div>
+      <div>
+        <span className='company-description'>{props.company.oneLiner}</span>
+      </div>
     </div>
-    <img className="company-image" src={props.company.smallLogoUrl} />
+
     {/* <pre>{JSON.stringify(props.company, null, 2)}</pre> */}
   </div >
 }
