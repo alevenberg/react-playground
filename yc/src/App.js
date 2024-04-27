@@ -46,8 +46,22 @@ function Users(props) {
 
   if (error) return 'An error has occurred: ' + error.message
 
+  const total_companies = data.totalPages * PAGE_SIZE;
+  let total_companies_text = "";
+  if (total_companies > 1000) {
+    total_companies_text += "1000+";
+  } else {
+    total_companies_text.concat(`${total_companies}`)
+  }
+  if (total_companies == 1) {
+    total_companies_text += " company";
+  } else {
+    total_companies_text += " companies";
+  }
+
   return <div>
-    <p>Showing X of X companies\n PAGE{props.currentPage} / {data.totalPages} </p>
+    <p>Showing {(props.currentPage * PAGE_SIZE)}  of {total_companies_text}</p>
+    <p> PAGE{props.currentPage} / {data.totalPages} </p>
     <button disabled={(props.currentPage <= 1)} onClick={() => props.setCurrentPage((old) => old - 1)}>Previous</button>
     <button disabled={(props.currentPage > data.totalPages)} onClick={() => props.setCurrentPage((old) => old + 1)}>Next</button>
 
