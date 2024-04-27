@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 const queryClient = new QueryClient()
 const API_ENDPOINT = "https://api.ycombinator.com/v0.1/companies"
-const PAGE_SIZE = 10
+const PAGE_SIZE = 25
 
 function Company(props) {
   const regions = props.company.regions?.join(" · ");
