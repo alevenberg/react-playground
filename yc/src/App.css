@@ -40,3 +40,12 @@
    -ms-box-sizing: border-box;
    box-sizing: border-box;
  }
+
+ .message {
+   font-size: 14px;
+   color: #4e4e4e;
+   text-align: left;
+   margin-bottom: 8px;
+ }
+
+ /* todo handle no message */

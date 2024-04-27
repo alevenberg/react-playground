@@ -60,7 +60,8 @@ function Users(props) {
   }
 
   return <div>
-    <p>Showing {(props.currentPage * PAGE_SIZE)}  of {total_companies_text}</p>
+    {/* <div className='status'>Sorry, no matching companies found</div> */}
+    <div className='message'>Showing {(props.currentPage * PAGE_SIZE)}  of {total_companies_text}</div>
     <p> PAGE{props.currentPage} / {data.totalPages} </p>
     <button disabled={(props.currentPage <= 1)} onClick={() => props.setCurrentPage((old) => old - 1)}>Previous</button>
     <button disabled={(props.currentPage > data.totalPages)} onClick={() => props.setCurrentPage((old) => old + 1)}>Next</button>
