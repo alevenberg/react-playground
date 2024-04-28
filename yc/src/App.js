@@ -4,21 +4,19 @@ import {
   useQuery,
 } from '@tanstack/react-query'
 import axios from 'axios'
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef } from 'react'
 import './App.css';
 import { v4 as uuidv4 } from 'uuid';
 
 const queryClient = new QueryClient()
 const API_ENDPOINT = "https://api.ycombinator.com/v0.1/companies"
-// How many to present via load more.
-const PAGE_SIZE = 25
 
 function Company(props) {
   const regions = props.company.regions?.join(" · ");
   return <div key={"k-" + props.company.id} className="company" role="listitem" >
-    <a href={props.company.website}></a>
+    <a href={props.company.website}> </a>
     <div className='company-child logo'>
-      <img className="company-image" src={props.company.smallLogoUrl} />
+      <img alt='logo' className="company-image" src={props.company.smallLogoUrl} />
     </div>
     <div className='company-child information'>
       <div>
@@ -29,12 +27,10 @@ function Company(props) {
         <span className='company-description'>{props.company.oneLiner}</span>
       </div>
     </div>
-
-    {/* <pre>{JSON.stringify(props.company, null, 2)}</pre> */}
   </div >
 }
 
-function Companies({ pageParam, queryParam, setPageParam, isNewQuery, setIsNewQuery }) {
+function Companies({ pageParam, queryParam, setPageParam }) {
   const [companies, setCompanies] = useState([]);
   // const [totalPages, setTotalPages] = useState(0);
 
@@ -49,6 +45,7 @@ function Companies({ pageParam, queryParam, setPageParam, isNewQuery, setIsNewQu
 
   const { isPending, errorPageQuery } = useQuery({
     queryKey: [pageParam, queryParam],
+    refetchOnMount: false,
     queryFn: () =>
       axios
         .get(`${API_ENDPOINT}?page=${pageParam}&q=${queryParam}`)
@@ -65,12 +62,10 @@ function Companies({ pageParam, queryParam, setPageParam, isNewQuery, setIsNewQu
             const newCompanies = [...companies, ...res.data.companies];
             setCompanies(newCompanies);
           }
-          if (res.data.page === totalPages.current - 1) {
-            isFirstQuery.current = false;
-          }
+          console.log(isFirstQuery.current);
+
           if (res.data.nextPage === undefined) {
             isEndOfResults.current = true;
-            console.log(isEndOfResults);
           }
           return res.data;
         }
@@ -79,11 +74,11 @@ function Companies({ pageParam, queryParam, setPageParam, isNewQuery, setIsNewQu
 
   var lastPage = totalPages.current - 1;
   var lastPageLength = useRef(0);
-  var isSingleRequestResult = (isFirstQuery.current && isEndOfResults.current);
+  var isFirstQueryAndNotSinglePageResult = (isFirstQuery.current && !isEndOfResults.current);
   // A best effort query for the last page to get the total results.
   useQuery({
     queryKey: [lastPage, queryParam],
-    enabled: !isSingleRequestResult,
+    enabled: isFirstQueryAndNotSinglePageResult,
     queryFn: () =>
       axios
         .get(`${API_ENDPOINT}?page=${lastPage}&q=${queryParam}`)
@@ -96,7 +91,8 @@ function Companies({ pageParam, queryParam, setPageParam, isNewQuery, setIsNewQu
 
   function getMessage() {
     const total_companies_on_page = companies.length;
-    const total_companies = (isSingleRequestResult) ? firstPageLength.current : (firstPageLength.current * (totalPages.current - 1)) + lastPageLength.current;
+    var isSinglePageResult = (isFirstQuery.current && isEndOfResults.current);
+    const total_companies = (isSinglePageResult) ? firstPageLength.current : (firstPageLength.current * (totalPages.current - 1)) + lastPageLength.current;
     var total_companies_text = `Showing ${total_companies_on_page} of `;
     if (total_companies === 1) {
       total_companies_text += "1 company";
@@ -113,14 +109,16 @@ function Companies({ pageParam, queryParam, setPageParam, isNewQuery, setIsNewQu
 
   function loadMore(e) {
     e.preventDefault();
+    isFirstQuery.current = false;
     setPageParam((old) => old + 1);
   }
 
   if (errorPageQuery) return 'An error has occurred: ' + errorPageQuery.message
   if (totalPages.current === 0) return <div className='status'>Sorry, no matching companies found</div>
 
+  console.log(isFirstQuery.current);
   return <div>
-    {(isPending && isFirstQuery) ? <div className='loading'>Loading... </div> :
+    {(isPending && isFirstQuery.current) ? <div className='loading'>Loading... </div> :
       <>
         <div className='message'>{getMessage()}</div>
         <div className="companies" role="list">{companies.map((company, idx) => ((
@@ -140,7 +138,6 @@ function Companies({ pageParam, queryParam, setPageParam, isNewQuery, setIsNewQu
 export default function App() {
   const [pageParam, setPageParam] = useState(1);
   const [queryParam, setQueryParam] = useState("");
-  const [isNewQuery, setIsNewQuery] = useState(false);
 
   return (
     <div className='app'>
@@ -150,12 +147,11 @@ export default function App() {
           setQueryParam(e.target.value);
           // When querying the /companies endpoint with a q parameter, the pages start from 0.
           setPageParam(0);
-          setIsNewQuery(true);
         }} name="search" type="text" placeholder="Search..."></input >
       </div>
       <QueryClientProvider client={queryClient}>
         <Companies pageParam={pageParam} queryParam={queryParam} setPageParam={setPageParam}
-          isNewQuery={isNewQuery} setIsNewQuery={setIsNewQuery}
+
         />
       </QueryClientProvider>
     </div >
