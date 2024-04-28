@@ -13,6 +13,7 @@ export function Companies({ pageParam, setPageParam, queryParam }) {
   var hasQueryParam = queryParam.length > 0;
   var currentPage = hasQueryParam ? pageParam + 1 : pageParam;
   var totalPages = useRef(-1);
+  var firstPageLength = useRef(0);
   var isEndOfResults = useRef(false);
   var isFirstQuery = useRef(false);
 
@@ -26,6 +27,8 @@ export function Companies({ pageParam, setPageParam, queryParam }) {
           if (currentPage === 1) {
             isFirstQuery.current = true;
             setCompanies(res.data.companies);
+            firstPageLength.current = res.data.companies.length;
+            totalPages.current = res.data.totalPages;
             isEndOfResults.current = false;
           } else {
             // If this is not the first request, add companies to the list if they are not already present.
@@ -55,6 +58,48 @@ export function Companies({ pageParam, setPageParam, queryParam }) {
         }),
   });
 
+  var lastPage = totalPages.current - 1;
+  var lastPageLength = useRef(0);
+  var isFirstQueryAndNotSinglePageResult =
+    isFirstQuery.current && !isEndOfResults.current;
+  // A best effort query for the last page to get the total results.
+  useQuery({
+    queryKey: [lastPage, queryParam],
+    refetchOnWindowFocus: false,
+    enabled: isFirstQueryAndNotSinglePageResult,
+    queryFn: () =>
+      axios
+        .get(`${API_ENDPOINT}?page=${lastPage}&q=${queryParam}`)
+        .then((res) => {
+          lastPageLength.current = res.data.companies.length;
+          return lastPageLength.current;
+        }),
+  });
+
+  function getMessage() {
+    const total_companies_on_page = companies.length;
+    var isSinglePageResult = isFirstQuery.current && isEndOfResults.current;
+    const total_companies = isSinglePageResult
+      ? firstPageLength.current
+      : Math.max(
+          firstPageLength.current * (totalPages.current - 1) +
+            lastPageLength.current,
+          total_companies_on_page
+        );
+    var total_companies_text = `Showing ${total_companies_on_page} of `;
+    if (total_companies === 1) {
+      total_companies_text += "1 company";
+    } else {
+      if (total_companies > 1000) {
+        total_companies_text += "1000+";
+      } else {
+        total_companies_text += total_companies;
+      }
+      total_companies_text += " companies";
+    }
+    return total_companies_text;
+  }
+
   function loadMore(e) {
     e.preventDefault();
     isFirstQuery.current = false;
@@ -71,8 +116,9 @@ export function Companies({ pageParam, setPageParam, queryParam }) {
         <div className="loading">Loading... </div>
       ) : (
         <>
+          <div className="message">{getMessage()}</div>
           <div className="companies" role="list">
-            {companies.map((company) => (
+            {companies.map((company, idx) => (
               <Company key={uuidv4()} company={company} />
             ))}
           </div>
