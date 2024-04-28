@@ -10,14 +10,14 @@
     position: relative;
 }
 
-.company name {
+.company-name {
     font-family: Avenir, Helvetica, Arial, sans-serif;
     font-weight: 700;
     margin-right: 10px;
     font-size: 18px;
 }
 
-.company location {
+.company-location {
     font-size: 12px;
     margin-right: 10px;
 }
