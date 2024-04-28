@@ -89,26 +89,20 @@ function Companies({ pageParam, queryParam, setPageParam, isNewQuery, setIsNewQu
   })
 
   function getMessage() {
-    //   companies = companies.length
-    //   total = firstQueryLength * totalPages -1 + lastQuerylength
-    //   let total_companies = totalPages * PAGE_SIZE;
-    //   const total_companies_on_page = Math.min(total_companies, companies.length);
-    //   if (props.isEndOfResults) {
-    //     total_companies = companies.length;
-    //   }
-    //   console.log("total_companies".concat(total_companies));
-    //   let total_companies_text = `Showing ${total_companies_on_page} of `;
-    //   if (total_companies === 1) {
-    //     total_companies_text += "1 company";
-    //   } else {
-    //     if (total_companies > 1000) {
-    //       total_companies_text += "1000+";
-    //     } else {
-    //       total_companies_text += total_companies;
-    //     }
-    //     total_companies_text += " companies";
-    //   }
-    //   return total_companies_text;
+    const total_companies_on_page = companies.length;
+    const total_companies = firstPageLength.current * (totalPages.current) + lastPageLength;
+    var total_companies_text = `Showing ${total_companies_on_page} of `;
+    if (total_companies === 1) {
+      total_companies_text += "1 company";
+    } else {
+      if (total_companies > 1000) {
+        total_companies_text += "1000+";
+      } else {
+        total_companies_text += total_companies;
+      }
+      total_companies_text += " companies";
+    }
+    return total_companies_text;
   }
 
   function loadMore(e) {
