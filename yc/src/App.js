@@ -44,7 +44,8 @@ function Companies({ pageParam, queryParam, setPageParam, isNewQuery, setIsNewQu
   var totalPages = useRef(-1);
   var firstPageLength = useRef(0);
   var isEndOfResults = useRef(false);
-  var isFirstQuery = false;
+  var isFirstQuery = useRef(false);
+
 
   const { isPending, errorPageQuery } = useQuery({
     queryKey: [pageParam, queryParam],
@@ -55,7 +56,7 @@ function Companies({ pageParam, queryParam, setPageParam, isNewQuery, setIsNewQu
           console.log(res.data);
           // First query in the pagination.
           if (currentPage === 1) {
-            isFirstQuery = true;
+            isFirstQuery.current = true;
             setCompanies(res.data.companies);
             firstPageLength.current = res.data.companies.length;
             totalPages.current = res.data.totalPages;
@@ -64,33 +65,38 @@ function Companies({ pageParam, queryParam, setPageParam, isNewQuery, setIsNewQu
             const newCompanies = [...companies, ...res.data.companies];
             setCompanies(newCompanies);
           }
+          if (res.data.page === totalPages.current - 1) {
+            isFirstQuery.current = false;
+          }
           if (res.data.nextPage === undefined) {
             isEndOfResults.current = true;
-            console.log("setIsEndOfResults" + isEndOfResults);
+            console.log(isEndOfResults);
           }
           return res.data;
         }
         ),
   })
 
-  var lastPage = totalPages - 1;
-  var lastPageLength = 0;
+  var lastPage = totalPages.current - 1;
+  var lastPageLength = useRef(0);
+  var isSingleRequestResult = (isFirstQuery.current && isEndOfResults.current);
   // A best effort query for the last page to get the total results.
   useQuery({
     queryKey: [lastPage, queryParam],
-    enabled: isFirstQuery && !isEndOfResults,
+    enabled: !isSingleRequestResult,
     queryFn: () =>
       axios
         .get(`${API_ENDPOINT}?page=${lastPage}&q=${queryParam}`)
         .then((res) => {
-          lastPageLength = res.data.companies.length;
+          lastPageLength.current = res.data.companies.length;
+          return lastPageLength.current;
         }
         ),
   })
 
   function getMessage() {
     const total_companies_on_page = companies.length;
-    const total_companies = firstPageLength.current * (totalPages.current) + lastPageLength;
+    const total_companies = (isSingleRequestResult) ? firstPageLength.current : (firstPageLength.current * (totalPages.current - 1)) + lastPageLength.current;
     var total_companies_text = `Showing ${total_companies_on_page} of `;
     if (total_companies === 1) {
       total_companies_text += "1 company";
