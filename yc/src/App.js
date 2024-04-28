@@ -19,10 +19,8 @@ const API_ENDPOINT = "https://api.ycombinator.com/v0.1/companies"
 
 function Companies({ pageParam, queryParam, setPageParam }) {
   const [companies, setCompanies] = useState([]);
-  // const [totalPages, setTotalPages] = useState(0);
 
   var hasQueryParam = queryParam.length > 0;
-  // var currentPage = hasQueryParam ? pageParam + 1 : pageParam;
   var currentPage = hasQueryParam ? pageParam + 1 : pageParam;
   var totalPages = useRef(-1);
   var firstPageLength = useRef(0);
@@ -35,7 +33,6 @@ function Companies({ pageParam, queryParam, setPageParam }) {
       axios
         .get(`${API_ENDPOINT}?page=${pageParam}&q=${queryParam}`)
         .then((res) => {
-          console.log(res.data);
           // First query in the pagination.
           if (currentPage === 1) {
             isFirstQuery.current = true;
@@ -47,8 +44,6 @@ function Companies({ pageParam, queryParam, setPageParam }) {
             const newCompanies = [...companies, ...res.data.companies];
             setCompanies(newCompanies);
           }
-          console.log(isFirstQuery.current);
-
           if (res.data.nextPage === undefined) {
             isEndOfResults.current = true;
           }
