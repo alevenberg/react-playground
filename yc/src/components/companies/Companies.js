@@ -34,7 +34,14 @@ export function Companies({ pageParam, queryParam, setPageParam }) {
                         totalPages.current = res.data.totalPages;
                         isEndOfResults.current = false;
                     } else {
-                        const newCompanies = [...companies, ...res.data.companies];
+                        const merge = (a, b, predicate = (a, b) => a === b) => {
+                            const c = [...a]; // copy to avoid side effects
+                            // add all items from B to copy C if they're not already present
+                            b.forEach((bItem) => (c.some((cItem) => predicate(bItem, cItem)) ? null : c.push(bItem)))
+                            return c;
+                        }
+                        const newCompanies = merge(companies, res.data.companies, (a, b) => a.id === b.id);
+
                         setCompanies(newCompanies);
                     }
                     if (res.data.nextPage === undefined) {
@@ -51,6 +58,7 @@ export function Companies({ pageParam, queryParam, setPageParam }) {
     // A best effort query for the last page to get the total results.
     useQuery({
         queryKey: [lastPage, queryParam],
+        refetchOnWindowFocus: false,
         enabled: isFirstQueryAndNotSinglePageResult,
         queryFn: () =>
             axios
@@ -65,7 +73,7 @@ export function Companies({ pageParam, queryParam, setPageParam }) {
     function getMessage() {
         const total_companies_on_page = companies.length;
         var isSinglePageResult = (isFirstQuery.current && isEndOfResults.current);
-        const total_companies = (isSinglePageResult) ? firstPageLength.current : (firstPageLength.current * (totalPages.current - 1)) + lastPageLength.current;
+        const total_companies = (isSinglePageResult) ? firstPageLength.current : Math.max((firstPageLength.current * (totalPages.current - 1)) + lastPageLength.current, total_companies_on_page);
         var total_companies_text = `Showing ${total_companies_on_page} of `;
         if (total_companies === 1) {
             total_companies_text += "1 company";
