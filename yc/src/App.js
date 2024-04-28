@@ -34,114 +34,130 @@ function Company(props) {
   </div >
 }
 
-function Companies(props) {
+function Companies({ pageParam, queryParam, setPageParam, isNewQuery, setIsNewQuery }) {
   const [companies, setCompanies] = useState([]);
-  const [totalPages, setTotalPages] = useState(0);
-  const currentPage = props.currentPage;
-  const queryParam = props.queryParam;
-  // The /companies endpoint starts from page 0 when you use a q parameter and returns page size 20, 
-  // but page size 25 1 when you only use the page parameter
-  var pageParam = (queryParam == "") ? currentPage : currentPage - 1;
+  // const [totalPages, setTotalPages] = useState(0);
 
-  const { isPending, error } = useQuery({
+  var hasQueryParam = queryParam.length > 0;
+  // var currentPage = hasQueryParam ? pageParam + 1 : pageParam;
+  var currentPage = hasQueryParam ? pageParam + 1 : pageParam;
+  var totalPages = useRef(-1);
+  var firstPageLength = useRef(0);
+  var isEndOfResults = false;
+  var isFirstQuery = false;
+
+  const { isPending, errorPageQuery } = useQuery({
     queryKey: [pageParam, queryParam],
     queryFn: () =>
       axios
         .get(`${API_ENDPOINT}?page=${pageParam}&q=${queryParam}`)
         .then((res) => {
-          // console.log(res.data);
-          // console.log(queryParam)
-          // console.log("page" + pageParam)
-          if ((pageParam == 0 && queryParam != "") || (pageParam == 1 && queryParam == "")) {
-            // Clear the existiting data
-            // console.log("clear")
+          console.log(res.data);
+          // First query in the pagination.
+          if (currentPage === 1) {
+            isFirstQuery = true;
             setCompanies(res.data.companies);
+            firstPageLength.current = res.data.companies.length;
+            totalPages.current = res.data.totalPages;
+            isEndOfResults = false;
           } else {
             const newCompanies = [...companies, ...res.data.companies];
             setCompanies(newCompanies);
           }
-          console.log(companies.length)
-          setTotalPages(res.data.totalPages);
-          console.log(res.data)
-          console.log("next" + res.data.nextPage);
-
           if (res.data.nextPage === undefined) {
-            console.log("setIsEndOfResults" + props.setIsEndOfResults);
-            props.setIsEndOfResults(true);
+            isEndOfResults = true;
+            console.log("setIsEndOfResults" + isEndOfResults);
           }
-          // props.setCurrentPage((old) => {
-          //   if (old < res.data.totalPages && companies.length <= currentPage * PAGE_SIZE) { return old + 1 }
-          // });
           return res.data;
         }
         ),
   })
 
-  if (isPending && companies.length == 0) {
-    return <div className='loading'>Loading... </div>
-  }
-
-  if (error) return 'An error has occurred: ' + error.message
+  var lastPage = totalPages - 1;
+  var lastPageLength = 0;
+  // A best effort query for the last page to get the total results.
+  useQuery({
+    queryKey: [lastPage, queryParam],
+    enabled: isFirstQuery && !isEndOfResults,
+    queryFn: () =>
+      axios
+        .get(`${API_ENDPOINT}?page=${lastPage}&q=${queryParam}`)
+        .then((res) => {
+          lastPageLength = res.data.companies.length;
+        }
+        ),
+  })
 
   function getMessage() {
-    let total_companies = totalPages * PAGE_SIZE;
-    const total_companies_on_page = Math.min(total_companies, companies.length);
-    if (props.isEndOfResults) {
-      total_companies = companies.length;
-    }
-    console.log("total_companies".concat(total_companies));
-    let total_companies_text = `Showing ${total_companies_on_page} of `;
-    if (total_companies === 1) {
-      total_companies_text += "1 company";
-    } else {
-      if (total_companies > 1000) {
-        total_companies_text += "1000+";
-      } else {
-        total_companies_text += total_companies;
-      }
-      total_companies_text += " companies";
-    }
-    return total_companies_text;
+    //   companies = companies.length
+    //   total = firstQueryLength * totalPages -1 + lastQuerylength
+    //   let total_companies = totalPages * PAGE_SIZE;
+    //   const total_companies_on_page = Math.min(total_companies, companies.length);
+    //   if (props.isEndOfResults) {
+    //     total_companies = companies.length;
+    //   }
+    //   console.log("total_companies".concat(total_companies));
+    //   let total_companies_text = `Showing ${total_companies_on_page} of `;
+    //   if (total_companies === 1) {
+    //     total_companies_text += "1 company";
+    //   } else {
+    //     if (total_companies > 1000) {
+    //       total_companies_text += "1000+";
+    //     } else {
+    //       total_companies_text += total_companies;
+    //     }
+    //     total_companies_text += " companies";
+    //   }
+    //   return total_companies_text;
   }
 
   function loadMore(e) {
     e.preventDefault();
-    props.setCurrentPage((old) => old + 1);
+    setPageParam((old) => old + 1);
   }
-  // Todo, no matches
-  // Todo remove button at thend
+
+  // // Todo remove button at then
+  if (errorPageQuery) return 'An error has occurred: ' + errorPageQuery.message
+  if (totalPages.current === 0) return <div className='status'>Sorry, no matching companies found</div>
+
   return <div>
+    {(isPending && isFirstQuery) ? <div className='loading'>Loading... </div> :
+      <>
+        <div className='message'>{getMessage()}</div>
+        <div className="companies" role="list">{companies.map((company, idx) => ((
+          <Company key={uuidv4()} company={company} />
+        )))}
+        </div>
+        {(isPending) && <div className='loading'>Loading... </div>}
+      </>
+    }
 
-    {/* <div className='status'>Sorry, no matching companies found</div> */}
-    <div className='message'>{getMessage()}</div>
-    <div className="companies" role="list">{companies.map((company, idx) => ((
-      <Company key={uuidv4()} company={company} />
-    )))}
-
-    </div>
-    {(isPending) && <div className='loading'>Loading... </div>}
-
-    {(!props.isEndOfResults) &&
+    {(!isEndOfResults) &&
       <button onClick={loadMore}>Load more...</button>}
 
   </div >;
 }
 
 export default function App() {
-  const [currentPage, setCurrentPage] = useState(1);
+  const [pageParam, setPageParam] = useState(1);
   const [queryParam, setQueryParam] = useState("");
-  const [isEndOfResults, setIsEndOfResults] = useState(false);
+  const [isNewQuery, setIsNewQuery] = useState(false);
 
   return (
     <div className='app'>
       <h1 className="title"> Startup Directory </h1>
       <div className="search-box">
         <input onChange={e => {
-          setQueryParam(e.target.value); setCurrentPage(1); setIsEndOfResults(false);
+          setQueryParam(e.target.value);
+          // When querying the /companies endpoint with a q parameter, the pages start from 0.
+          setPageParam(0);
+          setIsNewQuery(true);
         }} name="search" type="text" placeholder="Search..."></input >
       </div>
       <QueryClientProvider client={queryClient}>
-        <Companies currentPage={currentPage} pageSize={PAGE_SIZE} isEndOfResults={isEndOfResults} setIsEndOfResults={setIsEndOfResults} setCurrentPage={setCurrentPage} queryParam={queryParam} />
+        <Companies pageParam={pageParam} queryParam={queryParam} setPageParam={setPageParam}
+          isNewQuery={isNewQuery} setIsNewQuery={setIsNewQuery}
+        />
       </QueryClientProvider>
     </div >
   )
