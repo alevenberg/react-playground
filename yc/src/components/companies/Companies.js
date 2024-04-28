@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import React, { useState, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { Company } from "../company/Company.js";
 
 const API_ENDPOINT = "https://api.ycombinator.com/v0.1/companies";
 
@@ -65,7 +66,7 @@ export function Companies({ pageParam, setPageParam }) {
         <>
           <div className="companies" role="list">
             {companies.map((company) => (
-              <div key={uuidv4()}>{JSON.stringify(company, 2, null)} </div>
+              <Company key={uuidv4()} company={company} />
             ))}
           </div>
           {isPending && <div className="loading">Loading... </div>}
