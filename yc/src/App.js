@@ -43,7 +43,7 @@ function Companies({ pageParam, queryParam, setPageParam, isNewQuery, setIsNewQu
   var currentPage = hasQueryParam ? pageParam + 1 : pageParam;
   var totalPages = useRef(-1);
   var firstPageLength = useRef(0);
-  var isEndOfResults = false;
+  var isEndOfResults = useRef(false);
   var isFirstQuery = false;
 
   const { isPending, errorPageQuery } = useQuery({
@@ -59,13 +59,13 @@ function Companies({ pageParam, queryParam, setPageParam, isNewQuery, setIsNewQu
             setCompanies(res.data.companies);
             firstPageLength.current = res.data.companies.length;
             totalPages.current = res.data.totalPages;
-            isEndOfResults = false;
+            isEndOfResults.current = false;
           } else {
             const newCompanies = [...companies, ...res.data.companies];
             setCompanies(newCompanies);
           }
           if (res.data.nextPage === undefined) {
-            isEndOfResults = true;
+            isEndOfResults.current = true;
             console.log("setIsEndOfResults" + isEndOfResults);
           }
           return res.data;
@@ -116,7 +116,6 @@ function Companies({ pageParam, queryParam, setPageParam, isNewQuery, setIsNewQu
     setPageParam((old) => old + 1);
   }
 
-  // // Todo remove button at then
   if (errorPageQuery) return 'An error has occurred: ' + errorPageQuery.message
   if (totalPages.current === 0) return <div className='status'>Sorry, no matching companies found</div>
 
@@ -132,7 +131,7 @@ function Companies({ pageParam, queryParam, setPageParam, isNewQuery, setIsNewQu
       </>
     }
 
-    {(!isEndOfResults) &&
+    {(!isEndOfResults.current) &&
       <button onClick={loadMore}>Load more...</button>}
 
   </div >;
