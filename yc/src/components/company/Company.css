@@ -77,19 +77,3 @@
     text-transform: uppercase;
     margin: 0;
 }
-
-.company-pill-batch {
-    color: #000;
-    background: orange;
-    border-radius: 4px;
-    padding: 4px 10px;
-    height: auto;
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    font-weight: 200;
-    letter-spacing: .1em;
-    display: inline-block;
-    font-size: 10px;
-    line-height: 12px;
-    text-transform: uppercase;
-    margin: 0;
-}
