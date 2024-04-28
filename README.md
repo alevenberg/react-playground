@@ -9,3 +9,6 @@ To run the local server:
 cd yc
 npm start
 ```
+
+## Features
+- Pagination. On every "Load More" button click, requests the next page of results. 
