@@ -30,6 +30,12 @@ function Company(props) {
   </div >
 }
 
+
+// TODO: handle refresh
+// add a sort
+// try and understand refresh data
+// write test cases.
+
 function Companies({ pageParam, queryParam, setPageParam }) {
   const [companies, setCompanies] = useState([]);
   // const [totalPages, setTotalPages] = useState(0);
@@ -42,10 +48,8 @@ function Companies({ pageParam, queryParam, setPageParam }) {
   var isEndOfResults = useRef(false);
   var isFirstQuery = useRef(false);
 
-
   const { isPending, errorPageQuery } = useQuery({
     queryKey: [pageParam, queryParam],
-    refetchOnMount: false,
     queryFn: () =>
       axios
         .get(`${API_ENDPOINT}?page=${pageParam}&q=${queryParam}`)
@@ -116,7 +120,6 @@ function Companies({ pageParam, queryParam, setPageParam }) {
   if (errorPageQuery) return 'An error has occurred: ' + errorPageQuery.message
   if (totalPages.current === 0) return <div className='status'>Sorry, no matching companies found</div>
 
-  console.log(isFirstQuery.current);
   return <div>
     {(isPending && isFirstQuery.current) ? <div className='loading'>Loading... </div> :
       <>
