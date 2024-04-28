@@ -1,0 +1,43 @@
+.companies {
+    border-radius: 8px;
+    background: #fdfdf8;
+    border: 1px solid #c6c6c6;
+    overflow: hidden;
+    box-sizing: border-box;
+    display: grid;
+    row-gap: 0px;
+}
+
+.loading {
+    font-size: 14px;
+    color: #4e4e4e;
+    text-align: left;
+    margin-bottom: 8px;
+}
+
+.status {
+    font-size: 14px;
+    color: #4e4e4e;
+    text-align: left;
+    margin-bottom: 8px;
+}
+
+button {
+    background-color: #ff6600;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    margin-top: 20px;
+    padding: 8px 12px;
+}
+
+button:hover {
+    background-color: #e65c00;
+}
+
+.message {
+    font-size: 14px;
+    color: #4e4e4e;
+    text-align: left;
+    margin-bottom: 8px;
+}
