@@ -1,0 +1,18 @@
+ .app {
+   padding: 0 13px;
+ }
+
+ .title {
+   font-family: Avenir, Helvetica, Arial, sans-serif;
+   font-size: 24px;
+   font-weight: normal;
+   margin-bottom: 24px;
+ }
+
+ body {
+  background-color: #f6f6ef;
+  color: #000;
+  font-family: sans-serif;
+  font-size: 16px;
+  padding: 16px;
+}

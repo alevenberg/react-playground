@@ -3,6 +3,7 @@ import axios from "axios";
 import React, { useState, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { Company } from "../company/Company.js";
+import "./Companies.css";
 
 const API_ENDPOINT = "https://api.ycombinator.com/v0.1/companies";
 
