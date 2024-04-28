@@ -12,3 +12,4 @@ npm start
 
 ## Features
 - Pagination. On every "Load More" button click, requests the next page of results. 
+- Search bar. On every change, it will create a new query to /companies.
