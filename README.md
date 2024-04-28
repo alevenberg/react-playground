@@ -1,4 +1,11 @@
-npx create-react-app tree   
-npm start
+# YC Companies
 
-https://apple.com/mac/compare/?modelList=iMac-24-M3_2,MacBook-Air-M2-15
+## Instructions
+To create the project: `npx create-react-app yc`   
+
+To run the local server:
+
+```
+cd yc
+npm start
+```
