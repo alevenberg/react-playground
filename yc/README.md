@@ -1,11 +1,11 @@
 # YC companies app
 
-
+https://api.ycombinator.com/v0.1/docs
+https://api.ycombinator.com/v0.1/companies?top_company=true
 TODO: 
 - [ ] handle refresh, maintain search value
 - [ ] Add sort option
-- [ ] Try and understand why refresh data is reloading 
-// write test cases.
+- [ ] write test cases.
 
 Search "Airbnb", hits load 4 times, get 66 results and maintain.
 

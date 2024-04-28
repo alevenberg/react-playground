@@ -32,6 +32,13 @@
     max-width: 100%;
 }
 
+.company-description {
+    font-size: 16px;
+    line-height: 1.6;
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    font-weight: 200;
+}
+
 .company a {
     position: absolute;
     top: 0px;
@@ -46,4 +53,43 @@
     color: #000;
     background-color: #fff;
     transition: none;
+}
+
+.company-pill-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    line-height: 1em;
+}
+
+.company-pill {
+    color: #000;
+    background: #e6e6dd;
+    border-radius: 4px;
+    padding: 4px 10px;
+    height: auto;
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    font-weight: 200;
+    letter-spacing: .1em;
+    display: inline-block;
+    font-size: 10px;
+    line-height: 12px;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+.company-pill-batch {
+    color: #000;
+    background: orange;
+    border-radius: 4px;
+    padding: 4px 10px;
+    height: auto;
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    font-weight: 200;
+    letter-spacing: .1em;
+    display: inline-block;
+    font-size: 10px;
+    line-height: 12px;
+    text-transform: uppercase;
+    margin: 0;
 }
